@@ -1,0 +1,119 @@
+// Arrow Tests
+// ===========
+
+@import "true";
+
+// Test Module
+// -----------
+
+@include test-module('fonts') {
+
+  // _get-font-face
+  @include test(_get-font-face) {
+    $fake: ( fake: (
+      name: FakeFont,
+      path: 'myfonts/fake-%s%s-webfont',
+      styles: regular,
+      files: (
+        bold italic: 'myfonts/fake-bolditalic-webfont'
+      ),
+    ));
+    $test: _get-font-face($fake);
+    $expect: (
+      font-family: "FakeFont",
+      src: (
+        font-url('myfonts/fake-regular-webfont.woff') format('woff'),
+        font-url('myfonts/fake-regular-webfont.ttf') format('truetype'),
+      ),
+      font-weight: normal,
+      font-style: normal,
+    ) (
+      font-family: "FakeFont",
+      src: (
+        font-url('myfonts/fake-bolditalic-webfont.woff') format('woff'),
+        font-url('myfonts/fake-bolditalic-webfont.ttf') format('truetype'),
+      ),
+      font-weight: bold,
+      font-style: italic,
+    );
+    @include assert-equal($test, $expect,
+      'Returns font-face-ready output from interpolation and explicit files.');
+  }
+
+
+  // _interpolate-font-files
+  @include test(_interpolate-font-files) {
+    $path: 'myfonts/fake-%s%s-webfont';
+    $test: _interpolate-font-files($path, (regular, bold italic));
+    $expect: (
+      regular: 'myfonts/fake-regular-webfont',
+      bold italic: 'myfonts/fake-bolditalic-webfont',
+    );
+    @include assert-equal($test, $expect,
+      'Returns map of styles and file-paths based on interpolation.');
+  }
+
+
+  // _get-font-placeholders
+  @include test(_get-font-placeholders) {
+    $fake: (
+      serif: (
+        name: FakeFont,
+        type: serif,
+        stack: garamond,
+      ),
+      mono: (
+        type: monospace,
+      ),
+    );
+    $test: _get-font-placeholders($fake);
+    $expect: (
+      "%serif": (
+        font-family: (FakeFont, garamond, serif)
+      ),
+      "%mono": (
+        font-family: (mono, monospace, serif)
+      ));
+    @include assert-equal($test, $expect,
+      'Returns a list of font-placeholder output maps.');
+  }
+
+
+  // _parse-font-styles
+  @include test(_parse-font-styles) {
+    $test: _parse-font-styles(false);
+    $expect: (
+      weight: normal,
+      style: normal,
+    );
+    @include assert-equal($test, $expect,
+      'Missing weights and styles return as normal.');
+
+    $test: _parse-font-styles(300 italic);
+    $expect: (
+      weight: 300,
+      style: italic,
+    );
+    @include assert-equal($test, $expect,
+      'Explicit weights and styles are properly parsed.');
+  }
+
+
+  // _build-font-src
+  @include test(_build-font-src) {
+    $test: _build-font-src('myfonts/fake-regular-webfont', woff ttf svg);
+    $expect: (
+      font-url('myfonts/fake-regular-webfont.woff') format('woff'),
+      font-url('myfonts/fake-regular-webfont.ttf') format('truetype'),
+      font-url('myfonts/fake-regular-webfont.svg') format('svg'),
+    );
+    @include assert-equal($test, $expect,
+      'Returns collated font paths and formats for src attribute.');
+  }
+}
+
+// Report
+// ------
+
+@include report;
+

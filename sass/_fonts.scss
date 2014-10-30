@@ -1,0 +1,202 @@
+// Fontface Tools
+// ==============
+
+$font-formats: woff ttf;
+$fonts: ();
+
+$_font-setting-options: (
+  styles: italic oblique,
+  weights: 100 200 300 400 500 600 700 800 900 bold bolder lighter,
+);
+
+
+// Fonts
+// -----
+// Establish fonts
+@mixin fonts(
+  $fonts: $fonts,
+  $formats: $font-formats
+) {
+  @include import-fonts($fonts, $formats);
+  @include font-placeholders($fonts);
+}
+
+
+// Import Fonts
+// ------------
+// Create font-face css
+@mixin import-fonts(
+  $fonts: $fonts,
+  $formats: $font-formats
+) {
+  $_output: _get-font-face($fonts, $formats);
+
+  @each $font in $_output {
+    @font-face {
+      @include render($font);
+    }
+  }
+}
+
+
+// Font Placeholders
+// -----------------
+// Create font-family placeholders
+@mixin font-placeholders(
+  $fonts: $fonts
+) {
+  $_output: _get-font-placeholders($fonts);
+
+  @include render($_output);
+}
+
+
+// Get Font Face
+// -------------
+// PRIVATE: Return a list of font-face output maps
+@function _get-font-face(
+  $fonts: $fonts,
+  $formats: $font-formats
+) {
+  $_return: ();
+
+  @each $font, $info in $fonts {
+    $_name: map-get($info, name) or $font;
+    $_files: map-get($info, files) or ();
+    $_interp-path: map-get($info, path);
+    $_interp-styles: map-get($info, styles);
+
+    @if $_interp-path and $_interp-styles {
+      $_interp: _interpolate-font-files($_interp-path, $_interp-styles);
+      $_files: map-merge($_interp, $_files);
+    }
+
+    @each $styles, $path in $_files {
+      $styles: _parse-font-styles($styles);
+      $_src: _build-font-src($path, $formats);
+
+      $_return: append($_return, (
+        font-family: quote($_name),
+        src: $_src,
+        font-weight: map-get($styles, weight),
+        font-style: map-get($styles, style),
+      ));
+    }
+  }
+
+  @return $_return;
+}
+
+
+// Interpolate Font Files
+// ----------------------
+// PRIVATE: Return font files based on path/style interpolation
+@function _interpolate-font-files(
+  $path,
+  $variants: regular
+) {
+  $_styles: map-get($_font-setting-options, styles);
+  $_weights: map-get($_font-setting-options, weights);
+  $_return: ();
+
+  @each $v in $variants {
+    $_key: ();
+    $_weight: '';
+    $_style: '';
+
+    @if length($v) == 1 {
+      $_weight: $v;
+      $_key: $v;
+    } @else {
+      @each $item in $v {
+        @if index($_styles, $item) {
+          $_style: $item;
+        } @else if index($_weights, $item) {
+          $_weight: $item;
+        }
+        $_key: append($_key, to-lower-case($item));
+      }
+    }
+
+    $_val: interpolate($path, $_weight, $_style);
+    $_return: map-merge($_return, ($_key: $_val));
+  }
+
+  @return $_return;
+}
+
+
+// Parse Font Styles
+// -----------------
+// PRIVATE: Return font weight and style based on shorthand syntax
+@function _parse-font-styles(
+  $face
+) {
+  $_styles: map-get($_font-setting-options, styles);
+  $_weights: map-get($_font-setting-options, weights);
+  $return: (
+    weight: normal,
+    style: normal,
+  );
+
+  @each $item in $face {
+    @if index($_styles, $item) {
+      $return: map-merge($return, (style: $item));
+    } @else if index($_weights, $item) {
+      $return: map-merge($return, (weight: $item));
+    }
+  }
+
+  @return $return;
+}
+
+
+// Build Font SRC
+// --------------
+// PRIVATE: Return src attribute based on path and formats
+@function _build-font-src(
+  $path,
+  $formats: $font-formats
+) {
+  $options: (
+    woff: 'woff',
+    ttf: 'truetype',
+    svg: 'svg',
+  );
+  $return: ();
+
+  @each $format in $formats {
+    $name: map-get($options, $format);
+    @if $name {
+      $src: font-url('#{$path}.#{$format}') format($name);
+      $return: append($return, $src, comma);
+    }
+  }
+
+  @return $return;
+}
+
+
+// Get Font Placeholders
+// ---------------------
+// PRIVATE: Return a list of font-placeholder maps ready for output
+@function _get-font-placeholders(
+  $fonts: $fonts
+) {
+  $_return: ();
+
+  @each $font, $info in $fonts {
+    $_name: map-get($info, name) or $font;
+    $_type: map-get($info, type);
+    $_stack: join($_name, map-get($info, stack) or (), comma);
+    $_stack: append($_stack, $_type, comma);
+
+    @if $_type == monospace {
+      $_stack: append($_stack, serif);
+    }
+
+    $_return: map-merge($_return, ('%#{$font}': (font-family: $_stack)));
+  }
+
+  @return $_return;
+}
