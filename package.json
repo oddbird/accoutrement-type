@@ -13,6 +13,9 @@
   },
   "author": "Eric M Suzanne <eric@oddbird.net>",
   "license": "MIT",
+  "eyeglass": {
+    "exports": "eyeglass-exports.js"
+  },
   "scripts": {
     "test": "node_modules/.bin/mocha"
   },
