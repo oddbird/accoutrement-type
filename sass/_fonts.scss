@@ -11,7 +11,7 @@ $font-path: '../fonts/' !default;
 @function font-url(
   $path
 ) {
-  @return url('#{$font-path}#{$path}');
+  @return url(quote($font-path + $path));
 }
 
 
@@ -39,6 +39,32 @@ $font-path: '../fonts/' !default;
 }
 
 
+@function _build-font-paths(
+  $style,
+  $_path
+) {
+  @if function-exists(interpolate) {
+    $_a: nth($style, 1);
+    $_b: if(length($style) > 1, nth($style, 2), null);
+
+    $_a: if($_a == 'normal', null, $_a);
+    $_b: if($_b == 'normal', null, $_b);
+
+    $_location: interpolate($_path, $_a, $_b);
+
+    $_a: if($_a, to-lower-case($_a), 'normal');
+    $_b: if($_b, to-lower-case($_b), 'normal');
+
+    $_a: if($_a == 'regular', 'normal', $_a);
+    $_b: if($_b == 'regular', 'normal', $_b);
+
+    @return $_location $_a $_b;
+  } @else {
+    @warn 'Font-Family interpolation requires the accoutrement-strings plugin';
+  }
+}
+
+
 // Font Family [mixin]
 // -------------------
 @mixin font-family(
@@ -51,21 +77,8 @@ $font-path: '../fonts/' !default;
 
   @if $_path and $_styles {
     @each $style in $_styles {
-      $_a: nth($style, 1);
-      $_b: if(length($style) > 1, nth($style, 2), null);
-
-      $_a: if($_a == 'normal', null, $_a);
-      $_b: if($_b == 'normal', null, $_b);
-
-      $_location: interpolate($_path, $_a, $_b);
-
-      $_a: if($_a, to-lower-case($_a), 'normal');
-      $_b: if($_b, to-lower-case($_b), 'normal');
-
-      $_a: if($_a == 'regular', 'normal', $_a);
-      $_b: if($_b == 'regular', 'normal', $_b);
-
-      @include font-face($_name $_location $_a $_b);
+      $_face: _build-font-paths($style, $_path);
+      @include font-face(join($_name, $_face));
     }
   } @else if $_files {
     @each $_style, $_location in $_files {

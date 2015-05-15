@@ -8,6 +8,7 @@
     "url": "git://github.com/oddbird/accoutrement-fonts.git"
   },
   "devDependencies": {
+    "accoutrement-strings": "^1.0.1",
     "mocha": "^2.1.0",
     "sass-true": "^2.0.2"
   },

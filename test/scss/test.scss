@@ -2,6 +2,7 @@
 // ===========
 
 @import '../../node_modules/sass-true/sass/true';
+@import '../../node_modules/accoutrement-strings/sass/strings';
 @import '../../sass/fonts';
 
 
@@ -13,6 +14,31 @@
 
     @include assert-equal($test, $expect,
       'Returns a full font-path with font-folder prepended.');
+  }
+}
+
+
+// Build Font Paths [function]
+@include test-module('build-font-paths [function]') {
+  @include test('Intrpolation') {
+    $path: 'sourcesanspro/sourcesanspro-%s%s-webfont';
+    $test: _build-font-paths('bold', $path);
+    $expect: sourcesanspro/sourcesanspro-bold-webfont bold normal;
+    @include assert-equal($test, $expect,
+      'Returns interpolated path and modifiers.');
+
+    $test: _parse-font($test);
+    $expect: (
+      font-family: 'sourcesanspro-bold-webfont',
+      font-style: normal,
+      font-weight: bold,
+      src: (
+        url('../fonts/sourcesanspro/sourcesanspro-bold-webfont.woff') format('woff'),
+        url('../fonts/sourcesanspro/sourcesanspro-bold-webfont.ttf') format('truetype'),
+      )
+    );
+    @include assert-equal(map-get($test, src), map-get($expect, src),
+      'Result will be parsed correctly.');
   }
 }
 
@@ -132,6 +158,3 @@
       'Return a font-face map based on name, type, and svg-name.');
   }
 }
-
-
-@include report;
