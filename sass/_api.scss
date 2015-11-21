@@ -88,8 +88,8 @@ $fonts: () !default;
 
   @font-face {
     font-family: quote($name);
-    font-style: map-get($variant, 'font-style');
-    font-weight: map-get($variant, 'font-weight');
+    font-style: unquote(map-get($variant, 'style'));
+    font-weight: unquote(map-get($variant, 'weight'));
 
     @if index($formats, 'eot') {
       // IE9 compat mode (eot)
@@ -115,6 +115,7 @@ $fonts: () !default;
 ) {
   @if (length($fonts) > 0) {
     $var-options: join($font-style-options, $font-weight-options);
+    $var-options: join($var-options, ('normal', 'regular'));
 
     @each $name, $font in $fonts {
       $variants: ();
@@ -131,6 +132,7 @@ $fonts: () !default;
 
       @if (length($variants) > 0) {
         @each $variant, $path in $variants {
+          $variant: if(($variant == 'regular'), 'normal', $variant);
           @include font-face($name, $path, $variant, $formats);
         }
       }
