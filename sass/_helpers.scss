@@ -1,0 +1,74 @@
+// Internal Font Helpers
+// =====================
+
+$font-style-options: 'italic' 'oblique';
+$font-weight-options: 100 200 300 400 500 600 700 800 900 'bold';
+$font-format-names: (
+  'ttf': 'truetype',
+  'otf': 'opentype',
+  'woff': 'woff',
+  'woff2': 'woff2',
+  'svg': 'svg',
+  'svgz': 'svg',
+  'eot': 'embedded-opentype',
+);
+
+
+// Font-URL [function]
+// -------------------
+/// Get a CSS-ready URL function (`url('my/path')`) with
+/// the full path to a file in the fonts directory.
+/// @param {String} $path -
+///   A path relative to the fonts directory.
+/// @return {$string} -
+///   The full path to a font file, in CSS `url('my/path')` format.
+@function font-url(
+  $path
+) {
+  $full-path: quote($font-path + $path);
+  @return url($full-path);
+}
+
+
+// Font Src
+// --------
+/// Get the font `src` value for a given font path and format.
+/// @access private
+@function _font-src(
+  $path,
+  $format,
+  $suffix: ''
+) {
+  $url: $path + '.' + $format + $suffix;
+  $format: map-get($font-format-names, $format);
+
+  @return font-url($url) format($format);
+}
+
+
+// Parse Font Variant
+// -------------------
+/// Parse a list of font variants into a map of styles and weights.
+/// @access private
+/// @param {List} $variant -
+///   A list of font variants, such as `('bold', 'italic')`.
+/// @return {$map} -
+///   A map of `style` and `weight` values.
+@function _parse-font-variant(
+  $variant
+) {
+  $return: (
+    'style': 'normal',
+    'weight': 'normal',
+  );
+
+  @each $item in $variant {
+    @if index($font-style-options, $item) {
+      $return: map-merge($return, ('style': $item));
+    } @else if index($font-weight-options, $item) {
+      $return: map-merge($return, ('weight': $item));
+    }
+  }
+
+  @return $return;
+}

@@ -1,18 +1,23 @@
 {
   "name": "accoutrement-fonts",
   "version": "1.0.4",
-  "description": "Sass string utilities.",
+  "description": "Sass webfont utilities.",
   "homepage": "https://github.com/oddbird/accoutrement-fonts",
   "repository": {
     "type": "git",
     "url": "git://github.com/oddbird/accoutrement-fonts.git"
   },
   "devDependencies": {
-    "accoutrement-strings": "^1.0.1",
-    "mocha": "^2.1.0",
-    "sass-true": "^2.0.2"
+    "chalk": "^1.1.1",
+    "gulp": "^3.9.0",
+    "gulp-sass-lint": "^1.1.0",
+    "gulp-util": "^3.0.7",
+    "mocha": "^2.3.4",
+    "sass-true": "^2.0.3",
+    "sassdoc": "^2.1.15",
+    "sassdoc-theme-oddbird": "^0.1.0"
   },
-  "author": "Eric M Suzanne <eric@oddbird.net>",
+  "author": "Miriam Suzanne <miriam@oddbird.net>",
   "license": "MIT",
   "keywords": [
     "sass",
@@ -25,9 +30,13 @@
     "exports": "eyeglass-exports.js"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha",
+    "release": "npm run test && gulp sasslint && gulp sassdoc"
   },
   "bugs": {
     "url": "https://github.com/oddbird/accoutrement-fonts/issues"
+  },
+  "dependencies": {
+    "accoutrement-strings": "^1.0.1"
   }
 }

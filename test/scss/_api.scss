@@ -1,0 +1,86 @@
+// Test Font API
+// =============
+
+
+$fonts: (
+  'sans': (
+    'name': 'FranklinGothic',
+    'stack': ('Helvetica', 'Arial', 'sans-serif'),
+    'regular': 'franklingothic-regular-filename',
+    'bold': 'franklingothic-bold-filename',
+    'bold' 'italic': 'franklingothic-bolditalic-filename',
+  ),
+
+  'CenturyOldStyle': (
+    'stack': ('Georgia', 'serif'),
+    'regular': 'centuryoldstyle-regular-filename',
+  ),
+);
+
+
+// Font Family [function]
+// ----------------------
+@include test-module('Font Family [function]') {
+  @include test('Explicit name') {
+    $expect: ('FranklinGothic', 'Helvetica', 'Arial', 'sans-serif');
+
+    @include assert-equal(
+      font-family('sans'),
+      $expect,
+      'Returns a font-stack with explicit name prepended.');
+  }
+
+  @include test('Implicit name') {
+    $expect: ('CenturyOldStyle', 'Georgia', 'serif');
+
+    @include assert-equal(
+      font-family('CenturyOldStyle'),
+      $expect,
+      'Returns a font-stack with implicit name prepended.');
+  }
+}
+
+
+// Font Family [mixin]
+// -------------------
+@include test-module('Font Family [mixin]') {
+  @include test('CSS output') {
+    @include assert('Generates font-family property and value.') {
+      @include input {
+        @include font-family('sans');
+      }
+
+      @include expect {
+        font-family: ('FranklinGothic', 'Helvetica', 'Arial', 'sans-serif');
+      }
+    }
+  }
+}
+
+
+// Font Face [mixin]
+// -----------------
+// @@@ currently causing a parse error in true...
+// @include test-module('Font Face [mixin]') {
+//   @include test('CSS output with old IE') {
+//     @include assert('Has extra src property') {
+//       @include input {
+//         @include font-face('myfont', 'myfontpath', 'bold', 'eot' 'woff2' 'svg');
+//       }
+
+//       @include expect {
+//         $eot: url('../fonts/myfontpath.eot?#iefix') format('embedded-opentype');
+//         $woff2: url('../fonts/myfontpath.woff2') format('woff2');
+//         $svg: url('../fonts/myfontpath.svg#myfont') format('svg');
+
+//         @font-face {
+//           font-family: 'myfont';
+//           font-style: normal;
+//           font-weight: bold;
+//           src: url('../fonts/myfontpath.eot') format('embedded-opentype');
+//           src: $eot, $woff2, $svg;
+//         }
+//       }
+//     }
+//   }
+// }

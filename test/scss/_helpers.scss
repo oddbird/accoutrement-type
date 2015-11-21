@@ -1,0 +1,56 @@
+// Test Font Helpers
+// =================
+
+
+// Font URL [function]
+// -------------------
+@include test-module('font-url [function]') {
+  @include test('Prepend font folder to font path') {
+    $test: font-url('myfont.woff');
+    $expect: url('../fonts/myfont.woff');
+
+    @include assert-equal($test, $expect,
+      'Returns a full font-path with font-folder prepended.');
+  }
+}
+
+
+// Font Src
+// --------
+@include test-module('Font Src [function]') {
+  @include test('Build a CSS-ready item for the font src property') {
+    @include assert-equal(
+      _font-src('myfont', 'eot', '?#iefix'),
+      font-url('myfont.eot?#iefix') format('embedded-opentype'),
+      'Returns a combined font-src value.');
+  }
+}
+
+
+// Parse Font Variant
+// ------------------
+@include test-module('Parse Font Variant [function]') {
+  @include test('Single variant') {
+    $expect: (
+      'style': 'normal',
+      'weight': 'bold',
+    );
+
+    @include assert-equal(
+      _parse-font-variant('bold'),
+      $expect,
+      'Parses a single variant, and returns normal for the other.');
+  }
+
+  @include test('Multiple variants') {
+    $expect: (
+      'style': 'italic',
+      'weight': 500,
+    );
+
+    @include assert-equal(
+      _parse-font-variant(500 'italic'),
+      $expect,
+      'Parses both style and weight variants.');
+  }
+}

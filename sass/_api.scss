@@ -1,0 +1,139 @@
+// Fonts API
+// =========
+
+
+// Font Formats
+// ------------
+/// The file formats to include when importing a font-face.
+/// @group config
+/// @type List
+$font-formats: 'woff' 'ttf' !default;
+
+
+// Font Path
+// ---------
+/// The path to your fonts directory,
+/// often relative to your output CSS.
+/// @group config
+/// @type String
+$font-path: '../fonts/' !default;
+
+
+// Fonts
+// -----
+/// A map for managing all your fonts on a project.
+/// @group config
+/// @example -
+///   $fonts: (
+///     'sans': (
+///       'name': 'FranklinGothic',
+///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
+///       'regular': 'franklingothic-regular-filename',
+///       'bold': 'franklingothic-bold-filename',
+///       'bold' 'italic': 'franklingothic-bolditalic-filename',
+///     ),
+///   );
+$fonts: () !default;
+
+
+// Font Family [function]
+// ----------------------
+/// Access a font-family from your `$fonts` map.
+/// @group api
+@function font-family(
+  $key
+) {
+  $font: map-get($fonts, $key);
+  $name: map-get($font, 'name') or $key;
+  @return join($name, map-get($font, 'stack'), 'comma');
+}
+
+
+// Font Family [mixin]
+// -------------------
+/// @group api
+/// Output a font-family from your `$fonts` map.
+@mixin font-family(
+  $key
+) {
+  font-family: font-family($key);
+}
+
+
+// Font-Face [mixin]
+// -----------------
+/// A wrapper utility for the CSS `@font-face` block.
+/// @group api
+@mixin font-face(
+  $name,
+  $path,
+  $variant: ('normal', 'normal'),
+  $formats: $font-formats
+) {
+  $variant: _parse-font-variant($variant);
+  $src: ();
+
+  @each $format in $formats {
+    $suffix: '';
+
+    @if ($format == 'eot') {
+      $suffix: '?#iefix';
+    } @else if index(('svg', 'svgz'), $format) {
+      $suffix: '#' + $name;
+    }
+
+    $item: _font-src($path, $format, $suffix);
+    $src: append($src, $item, 'comma');
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: map-get($variant, 'font-style');
+    font-weight: map-get($variant, 'font-weight');
+
+    @if index($formats, 'eot') {
+      // IE9 compat mode (eot)
+      src: _font-src($path, 'eot');
+    }
+
+    // IE6-IE8 (eot) - with '?#iefix'
+    // Modern Browsers (woff, woff2)
+    // Safari, Android, iOS (ttf, otf)
+    // Legacy iOS (svg, svgz) - with '#svgName'
+    src: $src;
+  }
+}
+
+
+// Import WebFonts
+// ---------------
+/// Import webfonts from your font config list
+/// @group api
+@mixin import-webfonts(
+  $fonts: $fonts,
+  $formats: $font-formats
+) {
+  @if (length($fonts) > 0) {
+    $var-options: join($font-style-options, $font-weight-options);
+
+    @each $name, $font in $fonts {
+      $variants: ();
+
+      @each $key, $value in $font {
+        $first: nth($key, 1);
+
+        @if ($first == 'name') {
+          $name: $value;
+        } @else if index($var-options, $first) {
+          $variants: map-merge($variants, ($key, $value));
+        }
+      }
+
+      @if (length($variants) > 0) {
+        @each $variant, $path in $variants {
+          @include font-face($name, $path, $variant, $formats);
+        }
+      }
+    }
+  }
+}

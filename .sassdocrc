@@ -1,0 +1,9 @@
+theme: 'oddbird'
+
+display:
+  access:
+    - public
+
+groups:
+  api: usage
+  config: configuration
