@@ -84,3 +84,7 @@ $fonts: (
 //     }
 //   }
 // }
+
+// @@@ at least we can check for comilation errors manually...
+@include font-face('myfont', 'myfontpath', 'bold', 'eot' 'woff2' 'svg');
+@include import-webfonts;

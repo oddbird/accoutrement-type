@@ -125,7 +125,7 @@ $fonts: () !default;
         @if ($first == 'name') {
           $name: $value;
         } @else if index($var-options, $first) {
-          $variants: map-merge($variants, ($key, $value));
+          $variants: map-merge($variants, ($key: $value));
         }
       }
 
