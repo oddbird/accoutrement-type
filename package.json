@@ -1,6 +1,6 @@
 {
   "name": "accoutrement-fonts",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "Sass webfont utilities.",
   "homepage": "https://github.com/oddbird/accoutrement-fonts",
   "repository": {
@@ -21,8 +21,10 @@
   "license": "MIT",
   "keywords": [
     "sass",
+    "css",
     "accoutrement",
     "toolkit",
+    "webfont",
     "font-face",
     "eyeglass-module"
   ],
@@ -35,8 +37,5 @@
   },
   "bugs": {
     "url": "https://github.com/oddbird/accoutrement-fonts/issues"
-  },
-  "dependencies": {
-    "accoutrement-strings": "^1.0.1"
   }
 }

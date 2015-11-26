@@ -51,8 +51,8 @@ $fonts: () !default;
 
 // Font Family [mixin]
 // -------------------
-/// @group api
 /// Output a font-family from your `$fonts` map.
+/// @group api
 @mixin font-family(
   $key
 ) {
@@ -107,7 +107,7 @@ $fonts: () !default;
 
 // Import WebFonts
 // ---------------
-/// Import webfonts from your font config list
+/// Import webfonts from your font config list.
 /// @group api
 @mixin import-webfonts(
   $fonts: $fonts,
