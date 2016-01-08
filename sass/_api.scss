@@ -23,7 +23,8 @@ $font-path: '../fonts/' !default;
 // -----
 /// A map for managing all your fonts on a project.
 /// @group config
-/// @example -
+/// @type Map
+/// @example scss -
 ///   $fonts: (
 ///     'sans': (
 ///       'name': 'FranklinGothic',
@@ -36,10 +37,32 @@ $font-path: '../fonts/' !default;
 $fonts: () !default;
 
 
+// Font-URL [function]
+// -------------------
+/// Get a CSS-ready URL function (`url('my/path')`) with
+/// the full path to a file in the fonts directory.
+/// @group usage
+/// @param {String} $path -
+///   A path relative to the fonts directory.
+/// @return {String} -
+///   The full path to a font file, in CSS `url('my/path')` format.
+@function font-url(
+  $path
+) {
+  $full-path: quote($font-path + $path);
+  @return url($full-path);
+}
+
+
 // Font Family [function]
 // ----------------------
 /// Access a font-family from your `$fonts` map.
-/// @group api
+/// @group usage
+/// @param {String} $key -
+///   The key-name of a font in your `$fonts` map.
+/// @return {String} -
+///   The full font-stack for the given font,
+///   ready for output with the `font-family` property.
 @function font-family(
   $key
 ) {
@@ -51,8 +74,10 @@ $fonts: () !default;
 
 // Font Family [mixin]
 // -------------------
-/// Output a font-family from your `$fonts` map.
-/// @group api
+/// Output a font-stack to font-family based on your `$fonts` configuration.
+/// @group usage
+/// @param {String} $key -
+///   The key-name of a font in your `$fonts` map.
 @mixin font-family(
   $key
 ) {
@@ -60,82 +85,60 @@ $fonts: () !default;
 }
 
 
-// Font-Face [mixin]
+// Font Face [mixin]
 // -----------------
-/// A wrapper utility for the CSS `@font-face` block.
-/// @group api
+/// Import any webfont defined in your `$fonts` configuration.
+/// @group usage
+/// @param {String} $key -
+///   The key-name of a font in your `$fonts` map.
+/// @param {List} $formats [$font-formats] -
+///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
+///   Font files will be imported in the order given.
 @mixin font-face(
-  $name,
-  $path,
-  $variant: ('normal', 'normal'),
+  $key,
   $formats: $font-formats
 ) {
-  $variant: _parse-font-variant($variant);
-  $src: ();
+  $var-options: join($font-style-options, $font-weight-options);
+  $var-options: join($var-options, ('normal', 'regular'));
+  $font: _font-get($key);
+  $name: $key;
+  $variants: ();
 
-  @each $format in $formats {
-    $suffix: '';
+  @each $key, $value in $font {
+    $first: nth($key, 1);
 
-    @if ($format == 'eot') {
-      $suffix: '?#iefix';
-    } @else if index(('svg', 'svgz'), $format) {
-      $suffix: '#' + $name;
+    @if ($first == 'name') {
+      $name: $value;
+    } @else if index($var-options, $first) {
+      $variants: map-merge($variants, ($key: $value));
     }
-
-    $item: _font-src($path, $format, $suffix);
-    $src: append($src, $item, 'comma');
   }
 
-  @font-face {
-    font-family: quote($name);
-    font-style: unquote(map-get($variant, 'style'));
-    font-weight: unquote(map-get($variant, 'weight'));
-
-    @if index($formats, 'eot') {
-      // IE9 compat mode (eot)
-      src: _font-src($path, 'eot');
+  @if (length($variants) > 0) {
+    @each $variant, $path in $variants {
+      $variant: if(($variant == 'regular'), 'normal', $variant);
+      @include _import-font-face($name, $path, $variant, $formats);
     }
-
-    // IE6-IE8 (eot) - with '?#iefix'
-    // Modern Browsers (woff, woff2)
-    // Safari, Android, iOS (ttf, otf)
-    // Legacy iOS (svg, svgz) - with '#svgName'
-    src: $src;
   }
 }
 
 
-// Import WebFonts
-// ---------------
+// Import WebFonts [mixin]
+// -----------------------
 /// Import webfonts from your font config list.
-/// @group api
+/// @group usage
+/// @param {Map} $fonts [$fonts] -
+///   A map of your font configuration.
+/// @param {List} $formats [$font-formats] -
+///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
+///   Font files will be imported in the order given.
 @mixin import-webfonts(
   $fonts: $fonts,
   $formats: $font-formats
 ) {
-  @if (length($fonts) > 0) {
-    $var-options: join($font-style-options, $font-weight-options);
-    $var-options: join($var-options, ('normal', 'regular'));
-
-    @each $name, $font in $fonts {
-      $variants: ();
-
-      @each $key, $value in $font {
-        $first: nth($key, 1);
-
-        @if ($first == 'name') {
-          $name: $value;
-        } @else if index($var-options, $first) {
-          $variants: map-merge($variants, ($key: $value));
-        }
-      }
-
-      @if (length($variants) > 0) {
-        @each $variant, $path in $variants {
-          $variant: if(($variant == 'regular'), 'normal', $variant);
-          @include font-face($name, $path, $variant, $formats);
-        }
-      }
+  @each $key, $value in $fonts {
+    @if type-of($value) == 'map' {
+      @include font-face($key, $font-formats);
     }
   }
 }

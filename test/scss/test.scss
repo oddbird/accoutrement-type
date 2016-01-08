@@ -5,6 +5,24 @@
 @import '../../node_modules/sass-true/sass/true';
 @import '../../sass/fonts';
 
+$fonts: (
+  'sans': (
+    'name': 'FranklinGothic',
+    'stack': ('Helvetica', 'Arial', 'sans-serif'),
+    'normal': 'franklingothic-regular-filename',
+    'bold': 'franklingothic-bold-filename',
+    'bold' 'italic': 'franklingothic-bolditalic-filename',
+  ),
+
+  'CenturyOldStyle': (
+    'stack': ('Georgia', 'serif'),
+    'normal': 'centuryoldstyle-regular-filename',
+  ),
+
+  'alias': 'CenturyOldStyle',
+  'kevin bacon': 'alias',
+);
+
 @import 'helpers';
 @import 'api';
 

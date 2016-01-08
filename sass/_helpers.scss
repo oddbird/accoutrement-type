@@ -14,19 +14,22 @@ $font-format-names: (
 );
 
 
-// Font-URL [function]
-// -------------------
-/// Get a CSS-ready URL function (`url('my/path')`) with
-/// the full path to a file in the fonts directory.
-/// @param {String} $path -
-///   A path relative to the fonts directory.
-/// @return {$string} -
-///   The full path to a font file, in CSS `url('my/path')` format.
-@function font-url(
-  $path
+// Font Get
+// --------
+/// Get a font from the `$fonts` map.
+/// @access private
+@function _font-get(
+  $key
 ) {
-  $full-path: quote($font-path + $path);
-  @return url($full-path);
+  $font: map-get($fonts, $key);
+
+  @if not $font {
+    @error '#{$key} is not defined in your `$fonts` configuration map.';
+  } @else if map-has-key($fonts, $font) {
+    $font: _font-get($font);
+  }
+
+  @return $font;
 }
 
 
@@ -71,4 +74,58 @@ $font-format-names: (
   }
 
   @return $return;
+}
+
+
+// Import Font-Face [mixin]
+// ------------------------
+/// A wrapper utility for the CSS `@font-face` block.
+/// @access private
+/// @param {String} $name -
+///   The font name.
+/// @param {String} $path -
+///   Path to the font files (leaving off the file format indicator).
+/// @param {String | List} $variant [('normal', 'normal')] -
+///   The font-style and font-weight properties.
+/// @param {List} $formats -
+///   The font formats (e.g. 'ttf', 'otf', 'woff') to import.
+///   Font files will be imported in the order given.
+@mixin _import-font-face(
+  $name,
+  $path,
+  $variant: ('normal', 'normal'),
+  $formats: $font-formats
+) {
+  $variant: _parse-font-variant($variant);
+  $src: ();
+
+  @each $format in $formats {
+    $suffix: '';
+
+    @if ($format == 'eot') {
+      $suffix: '?#iefix';
+    } @else if index(('svg', 'svgz'), $format) {
+      $suffix: '#' + $name;
+    }
+
+    $item: _font-src($path, $format, $suffix);
+    $src: append($src, $item, 'comma');
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: unquote(map-get($variant, 'style'));
+    font-weight: unquote(map-get($variant, 'weight'));
+
+    @if index($formats, 'eot') {
+      // IE9 compat mode (eot)
+      src: _font-src($path, 'eot');
+    }
+
+    // IE6-IE8 (eot) - with '?#iefix'
+    // Modern Browsers (woff, woff2)
+    // Safari, Android, iOS (ttf, otf)
+    // Legacy iOS (svg, svgz) - with '#svgName'
+    src: $src;
+  }
 }

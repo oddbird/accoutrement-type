@@ -1,6 +1,6 @@
 {
   "name": "accoutrement-fonts",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-rc.1",
   "description": "Sass webfont utilities.",
   "homepage": "https://github.com/oddbird/accoutrement-fonts",
   "repository": {
@@ -14,8 +14,8 @@
     "gulp-util": "^3.0.7",
     "mocha": "^2.3.4",
     "sass-true": "^2.0.3",
-    "sassdoc": "^2.1.15",
-    "sassdoc-theme-oddbird": "^0.1.0"
+    "sassdoc": "^2.1.19",
+    "sassdoc-theme-herman": "^0.2.1"
   },
   "author": "Miriam Suzanne <miriam@oddbird.net>",
   "license": "MIT",

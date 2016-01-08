@@ -2,20 +2,17 @@
 // =============
 
 
-$fonts: (
-  'sans': (
-    'name': 'FranklinGothic',
-    'stack': ('Helvetica', 'Arial', 'sans-serif'),
-    'normal': 'franklingothic-regular-filename',
-    'bold': 'franklingothic-bold-filename',
-    'bold' 'italic': 'franklingothic-bolditalic-filename',
-  ),
+// Font URL [function]
+// -------------------
+@include test-module('font-url [function]') {
+  @include test('Prepend font folder to font path') {
+    $test: font-url('myfont.woff');
+    $expect: url('../fonts/myfont.woff');
 
-  'CenturyOldStyle': (
-    'stack': ('Georgia', 'serif'),
-    'normal': 'centuryoldstyle-regular-filename',
-  ),
-);
+    @include assert-equal($test, $expect,
+      'Returns a full font-path with font-folder prepended.');
+  }
+}
 
 
 // Font Family [function]
@@ -58,33 +55,6 @@ $fonts: (
 }
 
 
-// Font Face [mixin]
-// -----------------
-// @@@ currently causing a parse error in true...
-// @include test-module('Font Face [mixin]') {
-//   @include test('CSS output with old IE') {
-//     @include assert('Has extra src property') {
-//       @include input {
-//         @include font-face('myfont', 'myfontpath', 'bold', 'eot' 'woff2' 'svg');
-//       }
-
-//       @include expect {
-//         $eot: url('../fonts/myfontpath.eot?#iefix') format('embedded-opentype');
-//         $woff2: url('../fonts/myfontpath.woff2') format('woff2');
-//         $svg: url('../fonts/myfontpath.svg#myfont') format('svg');
-
-//         @font-face {
-//           font-family: 'myfont';
-//           font-style: normal;
-//           font-weight: bold;
-//           src: url('../fonts/myfontpath.eot') format('embedded-opentype');
-//           src: $eot, $woff2, $svg;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @@@ at least we can check for comilation errors manually...
-@include font-face('myfont', 'myfontpath', 'bold', 'eot' 'woff2' 'svg');
+// @@@ for now we can just check for any comilation errors...
+@include font-face('kevin bacon');
 @include import-webfonts;

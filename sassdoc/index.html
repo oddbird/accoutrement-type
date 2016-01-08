@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>accoutrement-fonts Documentation</title><link href="assets/img/favicon.ico" rel="shortcut icon"><link rel="stylesheet" href="assets/css/main.css"><link rel="stylesheet" href="assets/css/theme.css"></head><body><header role="banner" data-sassdoc-region="banner"><h1 data-sassdoc="project-title"><a href="https://github.com/oddbird/accoutrement-fonts" rel="home" data-sassdoc="project-name">accoutrement-fonts</a> <span data-sassdoc="project-version">2.0.0-rc.1</span></h1></header><nav role="navigation" data-sassdoc-region="nav"><h2 data-sassdoc="nav-title"><a href="index.html" rel="home" data-sassdoc-nav="is-active">Pattern Library</a></h2><a href="config.html" data-sassdoc-nav="is-not-active">configuration</a> <a href="usage.html" data-sassdoc-nav="is-not-active">usage</a></nav><main role="main" data-sassdoc-region="main" data-sassdoc-page="index"><h1 id="accoutrement-fonts">Accoutrement-Fonts</h1><p>Webfont management tools. Gather all your fonts into a single map, access them by name, and easily import the webfonts.</p><h2 id="quick-start">Quick Start</h2><pre><code class="lang-bash">npm install accoutrement-fonts
+</code></pre><p>Configure your font settings:</p><pre><code class="lang-scss">$font-formats: &#39;woff&#39; &#39;ttf&#39;; // Define what webfont formats need importing
+$font-path: &#39;../fonts/&#39;; // Set the a path to your fonts directory
+
+$fonts: (
+  &#39;heading&#39;: ( // give your font a semantic name for reference
+    &#39;name&#39;: &#39;maven&#39;, // optionally set a different font name
+    &#39;stack&#39;: (&#39;helvetica&#39;, &#39;arial&#39;, sans-serif), // define the stack
+    &#39;normal&#39;: &#39;maven/maven_pro_regular-webfont&#39;, // point to any webfont files
+    &#39;bold&#39;: &#39;maven/maven_pro_bold-webfont&#39;,
+  ),
+
+  &#39;body&#39;: (
+    &#39;name&#39;: &#39;exo&#39;,
+    &#39;stack&#39;: (&#39;helvetica&#39;, &#39;arial&#39;, sans-serif),
+    &#39;normal&#39;: &#39;exo/exo2-regular-webfont&#39;,
+    &#39;italic&#39;: &#39;exo/exo2-italic-webfont&#39;,
+    &#39;bold&#39;: &#39;exo/exo2-bold-webfont&#39;,
+    &#39;bold&#39; &#39;italic&#39;: &#39;exo/exo2-bolditalic-webfont&#39;,
+  ),
+
+  &#39;alias&#39;: &#39;body&#39;, // create aliases when useful
+);
+</code></pre><p>Import a webfont, or all your configured fonts with a mixin:</p><pre><code class="lang-scss">@include font-face(&#39;body&#39;); // Import one font by configuration key
+@include import-webfonts; // Import all defined fonts
+</code></pre><p>And set your font-family anywhere, using the semantic names you set earlier:</p><pre><code class="lang-scss">html {
+  @include font-family(&#39;body&#39;);
+}
+
+h1, h2, h3 {
+  @include font-family(&#39;heading&#39;);
+}
+</code></pre><h2 id="about-oddbird-accoutrement">About OddBird Accoutrement</h2><p><a href="http://oddbird.net/">OddBird</a>&#39;s <em>Accourement</em> modules are individual Sass toolkits that work together to form the central nervous system of a project. They help to establish and access a projects configuration in consistent and inter-connected ways.</p></main><script type="text/javascript" src="assets/js/highlight.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script></body></html>

@@ -2,15 +2,26 @@
 // =================
 
 
-// Font URL [function]
-// -------------------
-@include test-module('font-url [function]') {
-  @include test('Prepend font folder to font path') {
-    $test: font-url('myfont.woff');
-    $expect: url('../fonts/myfont.woff');
+// Font Get
+// --------
+@include test-module('Font Get [function]') {
+  $expect: (
+    'stack': ('Georgia', 'serif'),
+    'normal': 'centuryoldstyle-regular-filename',
+  );
 
-    @include assert-equal($test, $expect,
-      'Returns a full font-path with font-folder prepended.');
+  @include test('Get a font directly') {
+    @include assert-equal(
+      _font-get('CenturyOldStyle'),
+      $expect,
+      'Returns a map based on font config key');
+  }
+
+  @include test('Get a font by alias') {
+    @include assert-equal(
+      _font-get('kevin bacon'),
+      $expect,
+      'Returns a map based on recursive font config key');
   }
 }
 
@@ -54,3 +65,11 @@
       'Parses both style and weight variants.');
   }
 }
+
+
+// @@@ for now we can just check for any comilation errors...
+@include _import-font-face(
+  'FranklinGothic',
+  'franklingothic-bolditalic-filename',
+  'bold' 'italic'
+  );
