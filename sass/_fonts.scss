@@ -2,7 +2,7 @@
 // ==============
 
 
-$font-formats: woff ttf !default;
+$font-formats: ('woff', 'ttf') !default;
 $font-path: '../fonts/' !default;
 
 
@@ -23,18 +23,18 @@ $font-path: '../fonts/' !default;
   $font: _parse-font($font);
 
   @font-face {
-    font-family: map-get($font, font-family);
-    font-style: map-get($font, font-style);
-    font-weight: map-get($font, font-weight);
+    font-family: map-get($font, 'font-family');
+    font-style: unquote(map-get($font, 'font-style'));
+    font-weight: map-get($font, 'font-weight');
 
     // IE9 compat mode (eot)
-    src: map-get($font, eot);
+    src: map-get($font, 'eot');
 
     // IE6-IE8 (eot)
     // Modern Browsers (woff, woff2)
     // Safari, Android, iOS (ttf, otf)
     // Legacy iOS (svg, svgz)
-    src: map-get($font, src);
+    src: map-get($font, 'src');
   }
 }
 
@@ -43,7 +43,7 @@ $font-path: '../fonts/' !default;
   $style,
   $_path
 ) {
-  @if function-exists(interpolate) {
+  @if function-exists('interpolate') {
     $_a: nth($style, 1);
     $_b: if(length($style) > 1, nth($style, 2), null);
 
@@ -70,10 +70,10 @@ $font-path: '../fonts/' !default;
 @mixin font-family(
   $font
 ) {
-  $_name: map-get($font, name);
-  $_path: map-get($font, path);
-  $_styles: map-get($font, styles);
-  $_files: map-get($font, files);
+  $_name: map-get($font, 'name');
+  $_path: map-get($font, 'path');
+  $_styles: map-get($font, 'styles');
+  $_files: map-get($font, 'files');
 
   @if $_path and $_styles {
     @each $style in $_styles {
@@ -96,12 +96,12 @@ $font-path: '../fonts/' !default;
   $fonts: $fonts
 ) {
   @each $selector, $font in $fonts {
-    $_stack: map-get($font, stack);
+    $_stack: map-get($font, 'stack');
 
     @include font-family($font);
 
     %#{$selector} {
-      font-family: map-get($font, name), $_stack;
+      font-family: map-get($font, 'name'), $_stack;
     }
   }
 }
@@ -112,7 +112,7 @@ $font-path: '../fonts/' !default;
 @function _name-from-path(
   $path
 ) {
-  @if ($path) and str-index($path, '/') {
+  @if $path and str-index($path, '/') {
     $_i: str-index($path, '/');
     $_name: str-slice($path, $_i + 1);
     @return _name-from-path($_name);
@@ -127,17 +127,17 @@ $font-path: '../fonts/' !default;
 @function _parse-font(
   $font
 ) {
-  $_styles: italic oblique;
-  $_weights: 100 200 300 400 500 600 700 800 900 bold;
-  $_type-options: eot woff woff2 ttf otf svg svgz;
+  $_styles: (italic, oblique);
+  $_weights: (100, 200, 300, 400, 500, 600, 700, 800, 900, bold);
+  $_type-options: ('eot', 'woff', 'woff2', 'ttf', 'otf', 'svg', 'svgz');
   $_type-names: (
-    ttf: 'truetype',
-    otf: 'opentype',
-    woff: 'woff',
-    woff2: 'woff2',
-    svg: 'svg',
-    svgz: 'svg',
-    eot: 'embedded-opentype',
+    'ttf': 'truetype',
+    'otf': 'opentype',
+    'woff': 'woff',
+    'woff2': 'woff2',
+    'svg': 'svg',
+    'svgz': 'svg',
+    'eot': 'embedded-opentype',
   );
 
   $_name: null;
@@ -150,7 +150,7 @@ $font-path: '../fonts/' !default;
   $_svg-name: null;
 
   @each $item in $font {
-    @if $item == normal {
+    @if $item == 'normal' {
       $_style: $_style or normal;
       $_weight: $_weight or normal;
     } @else if index($_styles, $item) or index($_weights, $item) {
@@ -182,22 +182,22 @@ $font-path: '../fonts/' !default;
   @each $type in $_types {
     $_url: $_path + '.' + $type;
 
-    @if $type == eot {
+    @if $type == 'eot' {
       $_eot: font-url($_url);
       $_url: $_url + '?#iefix';
-    } @else if $type == svg or $type == svgz {
+    } @else if $type == 'svg' or $type == 'svgz' {
       $_url: $_url + $_svg-name;
     }
 
     $_this: font-url($_url) format(map-get($_type-names, $type));
-    $_src: append($_src, $_this, comma);
+    $_src: append($_src, $_this, 'comma');
   }
 
   @return (
-    font-family: quote($_name),
-    font-style: $_style,
-    font-weight: $_weight,
-    eot: $_eot,
-    src: $_src,
+    'font-family': quote($_name),
+    'font-style': $_style,
+    'font-weight': $_weight,
+    'eot': $_eot,
+    'src': $_src,
   );
 }
