@@ -3,6 +3,9 @@
 
 $red: #fcc;
 
+
+// Before
+// ------
 @include test-module('before [mixin]') {
   @include test('Generate and style pseudo-element') {
     @include assert('Content is generated') {
@@ -22,6 +25,9 @@ $red: #fcc;
   }
 }
 
+
+// After
+// -----
 @include test-module('after [mixin]') {
   @include test('Generate and style pseudo-element') {
     @include assert('Content is generated') {
@@ -41,6 +47,9 @@ $red: #fcc;
   }
 }
 
+
+// Wrap Content
+// ------------
 @include test-module('wrap-content [mixin]') {
   @include test('Generate default wrappers') {
     @include assert('Smart quotes are generated and styled') {
