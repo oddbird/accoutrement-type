@@ -1,17 +1,29 @@
-Accoutrement-Fonts
-==================
+Accoutrement-Type
+=================
 
-Webfont management tools.
+Sass typography [Accoutrement][accoutrement]
+by [OddBird][oddbird].
 Gather all your fonts into a single map,
 access them by name,
 and easily import the webfonts.
+Also includes helpers for accessibility
+and pseudo-elements.
+
+[accoutrement]: http://oddbird.net/accoutrement/
+[oddbird]: http://oddbird.net/
 
 
 Quick Start
 -----------
 
 ```bash
-npm install accoutrement-fonts
+npm install accoutrement-type
+```
+
+Import the library:
+
+```scss
+@import 'path/to/accoutrement-type/type';
 ```
 
 Configure your font settings:
@@ -41,8 +53,8 @@ $fonts: (
 );
 ```
 
-Import a webfont,
-or all your configured fonts with a mixin:
+Import one or all webfonts,
+with the `font-face` or `import-webfonts` mixins:
 
 ```scss
 @include font-face('body'); // Import one font by configuration key
@@ -61,16 +73,3 @@ h1, h2, h3 {
   @include font-family('heading');
 }
 ```
-
-
-About OddBird Accoutrement
---------------------------
-
-[OddBird][oddbird]'s **Accoutrement** modules
-are individual Sass toolkits
-that work together to form
-the central nervous system of a project.
-They help to establish and access a projects configuration
-in consistent and inter-connected ways.
-
-[oddbird]: http://oddbird.net/
