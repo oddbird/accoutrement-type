@@ -1,0 +1,75 @@
+// Test Font Helpers
+// =================
+
+
+// Font Get
+// --------
+@include test-module('Font Get [function]') {
+  $expect: (
+    'stack': ('Georgia', 'serif'),
+    'normal': 'centuryoldstyle-regular-filename',
+  );
+
+  @include test('Get a font directly') {
+    @include assert-equal(
+      _font-get('CenturyOldStyle'),
+      $expect,
+      'Returns a map based on font config key');
+  }
+
+  @include test('Get a font by alias') {
+    @include assert-equal(
+      _font-get('kevin bacon'),
+      $expect,
+      'Returns a map based on recursive font config key');
+  }
+}
+
+
+// Font Src
+// --------
+@include test-module('Font Src [function]') {
+  @include test('Build a CSS-ready item for the font src property') {
+    @include assert-equal(
+      _font-src('myfont', 'eot', '?#iefix'),
+      font-url('myfont.eot?#iefix') format('embedded-opentype'),
+      'Returns a combined font-src value.');
+  }
+}
+
+
+// Parse Font Variant
+// ------------------
+@include test-module('Parse Font Variant [function]') {
+  @include test('Single variant') {
+    $expect: (
+      'style': 'normal',
+      'weight': 'bold',
+    );
+
+    @include assert-equal(
+      _parse-font-variant('bold'),
+      $expect,
+      'Parses a single variant, and returns normal for the other.');
+  }
+
+  @include test('Multiple variants') {
+    $expect: (
+      'style': 'italic',
+      'weight': 500,
+    );
+
+    @include assert-equal(
+      _parse-font-variant(500 'italic'),
+      $expect,
+      'Parses both style and weight variants.');
+  }
+}
+
+
+// @@@ for now we can just check for any comilation errors...
+@include _import-font-face(
+  'FranklinGothic',
+  'franklingothic-bolditalic-filename',
+  'bold' 'italic'
+  );

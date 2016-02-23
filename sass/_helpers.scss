@@ -1,0 +1,131 @@
+// Internal Font Helpers
+// =====================
+
+$_font-style-options: 'italic' 'oblique';
+$_font-weight-options: 100 200 300 400 500 600 700 800 900 'bold';
+$_font-format-options: (
+  'ttf': 'truetype',
+  'otf': 'opentype',
+  'woff': 'woff',
+  'woff2': 'woff2',
+  'svg': 'svg',
+  'svgz': 'svg',
+  'eot': 'embedded-opentype',
+);
+
+
+// Font Get
+// --------
+/// Get a font from the `$fonts` map.
+/// @access private
+@function _font-get(
+  $key
+) {
+  $font: map-get($fonts, $key);
+
+  @if not $font {
+    @error '#{$key} is not defined in your `$fonts` configuration map.';
+  } @else if map-has-key($fonts, $font) {
+    $font: _font-get($font);
+  }
+
+  @return $font;
+}
+
+
+// Font Src
+// --------
+/// Get the font `src` value for a given font path and format.
+/// @access private
+@function _font-src(
+  $path,
+  $format,
+  $suffix: ''
+) {
+  $url: $path + '.' + $format + $suffix;
+  $format: map-get($_font-format-options, $format);
+
+  @return font-url($url) format($format);
+}
+
+
+// Parse Font Variant
+// -------------------
+/// Parse a list of font variants into a map of styles and weights.
+/// @access private
+/// @param {List} $variant -
+///   A list of font variants, such as `('bold', 'italic')`.
+/// @return {$map} -
+///   A map of `style` and `weight` values.
+@function _parse-font-variant(
+  $variant
+) {
+  $return: (
+    'style': 'normal',
+    'weight': 'normal',
+  );
+
+  @each $item in $variant {
+    @if index($_font-style-options, $item) {
+      $return: map-merge($return, ('style': $item));
+    } @else if index($_font-weight-options, $item) {
+      $return: map-merge($return, ('weight': $item));
+    }
+  }
+
+  @return $return;
+}
+
+
+// Import Font-Face [mixin]
+// ------------------------
+/// A wrapper utility for the CSS `@font-face` block.
+/// @access private
+/// @param {String} $name -
+///   The font name.
+/// @param {String} $path -
+///   Path to the font files (leaving off the file format indicator).
+/// @param {String | List} $variant [('normal', 'normal')] -
+///   The font-style and font-weight properties.
+/// @param {List} $formats -
+///   The font formats (e.g. 'ttf', 'otf', 'woff') to import.
+///   Font files will be imported in the order given.
+@mixin _import-font-face(
+  $name,
+  $path,
+  $variant: ('normal', 'normal'),
+  $formats: $font-formats
+) {
+  $variant: _parse-font-variant($variant);
+  $src: ();
+
+  @each $format in $formats {
+    $suffix: '';
+
+    @if ($format == 'eot') {
+      $suffix: '?#iefix';
+    } @else if index(('svg', 'svgz'), $format) {
+      $suffix: '#' + $name;
+    }
+
+    $item: _font-src($path, $format, $suffix);
+    $src: append($src, $item, 'comma');
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: unquote(map-get($variant, 'style'));
+    font-weight: unquote(map-get($variant, 'weight'));
+
+    @if index($formats, 'eot') {
+      // IE9 compat mode (eot)
+      src: _font-src($path, 'eot');
+    }
+
+    // IE6-IE8 (eot) - with '?#iefix'
+    // Modern Browsers (woff, woff2)
+    // Safari, Android, iOS (ttf, otf)
+    // Legacy iOS (svg, svgz) - with '#svgName'
+    src: $src;
+  }
+}
