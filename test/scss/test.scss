@@ -3,7 +3,7 @@
 
 
 @import '../../node_modules/sass-true/sass/true';
-@import '../../sass/fonts';
+@import '../../sass/type';
 
 $fonts: (
   'sans': (
@@ -24,6 +24,8 @@ $fonts: (
 );
 
 @import 'helpers';
-@import 'api';
+@import 'a11y';
+@import 'fonts';
+@import 'pseudo-elements';
 
 @include report;

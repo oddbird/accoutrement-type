@@ -1,11 +1,11 @@
 {
-  "name": "accoutrement-fonts",
-  "version": "2.0.0-rc.1",
-  "description": "Sass webfont utilities.",
-  "homepage": "https://github.com/oddbird/accoutrement-fonts",
+  "name": "accoutrement-type",
+  "version": "2.0.0",
+  "description": "Sass typography and webfont utilities.",
+  "homepage": "https://github.com/oddbird/accoutrement-type",
   "repository": {
     "type": "git",
-    "url": "git://github.com/oddbird/accoutrement-fonts.git"
+    "url": "git://github.com/oddbird/accoutrement-type.git"
   },
   "devDependencies": {
     "chalk": "^1.1.1",
@@ -26,6 +26,7 @@
     "toolkit",
     "webfont",
     "font-face",
+    "typography",
     "eyeglass-module"
   ],
   "eyeglass": {
@@ -36,6 +37,6 @@
     "release": "npm run test && gulp sasslint && gulp sassdoc"
   },
   "bugs": {
-    "url": "https://github.com/oddbird/accoutrement-fonts/issues"
+    "url": "https://github.com/oddbird/accoutrement-type/issues"
   }
 }

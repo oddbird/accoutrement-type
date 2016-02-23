@@ -1,0 +1,84 @@
+// Arrow Tests
+// ===========
+
+$red: #fcc;
+
+@include test-module('before [mixin]') {
+  @include test('Generate and style pseudo-element') {
+    @include assert('Content is generated') {
+      @include input {
+        @include before('hello world') {
+          background: $red;
+        }
+      }
+
+      @include expect {
+        &:before {
+          content: "hello world";
+          background: $red;
+        }
+      }
+    }
+  }
+}
+
+@include test-module('after [mixin]') {
+  @include test('Generate and style pseudo-element') {
+    @include assert('Content is generated') {
+      @include input {
+        @include after('goodbye world') {
+          background: $red;
+        }
+      }
+
+      @include expect {
+        &:after {
+          content: "goodbye world";
+          background: $red;
+        }
+      }
+    }
+  }
+}
+
+@include test-module('wrap-content [mixin]') {
+  @include test('Generate default wrappers') {
+    @include assert('Smart quotes are generated and styled') {
+      @include input {
+        @include wrap-content {
+          color: $red;
+        }
+      }
+
+      @include expect {
+        &:before,
+        &:after {
+          content: "“";
+          color: $red;
+        }
+
+        &:after {
+          content: "”";
+        }
+      }
+    }
+  }
+
+  @include test('Generate identical wrappers') {
+    @include assert('Identical bullets are generated and styled') {
+      @include input {
+        @include wrap-content('•') {
+          color: $red;
+        }
+      }
+
+      @include expect {
+        &:before,
+        &:after {
+          content: "•";
+          color: $red;
+        }
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 // Internal Font Helpers
 // =====================
 
-$font-style-options: 'italic' 'oblique';
-$font-weight-options: 100 200 300 400 500 600 700 800 900 'bold';
-$font-format-names: (
+$_font-style-options: 'italic' 'oblique';
+$_font-weight-options: 100 200 300 400 500 600 700 800 900 'bold';
+$_font-format-options: (
   'ttf': 'truetype',
   'otf': 'opentype',
   'woff': 'woff',
@@ -43,7 +43,7 @@ $font-format-names: (
   $suffix: ''
 ) {
   $url: $path + '.' + $format + $suffix;
-  $format: map-get($font-format-names, $format);
+  $format: map-get($_font-format-options, $format);
 
   @return font-url($url) format($format);
 }
@@ -66,9 +66,9 @@ $font-format-names: (
   );
 
   @each $item in $variant {
-    @if index($font-style-options, $item) {
+    @if index($_font-style-options, $item) {
       $return: map-merge($return, ('style': $item));
-    } @else if index($font-weight-options, $item) {
+    } @else if index($_font-weight-options, $item) {
       $return: map-merge($return, ('weight': $item));
     }
   }
