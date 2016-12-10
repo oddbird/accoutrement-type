@@ -9,7 +9,7 @@ $red: #fcc;
 @include test-module('before [mixin]') {
   @include test('Generate and style pseudo-element') {
     @include assert('Content is generated') {
-      @include input {
+      @include output {
         @include before('hello world') {
           background: $red;
         }
@@ -31,7 +31,7 @@ $red: #fcc;
 @include test-module('after [mixin]') {
   @include test('Generate and style pseudo-element') {
     @include assert('Content is generated') {
-      @include input {
+      @include output {
         @include after('goodbye world') {
           background: $red;
         }
@@ -53,7 +53,7 @@ $red: #fcc;
 @include test-module('wrap-content [mixin]') {
   @include test('Generate default wrappers') {
     @include assert('Smart quotes are generated and styled') {
-      @include input {
+      @include output {
         @include wrap-content {
           color: $red;
         }
@@ -75,7 +75,7 @@ $red: #fcc;
 
   @include test('Generate identical wrappers') {
     @include assert('Identical bullets are generated and styled') {
-      @include input {
+      @include output {
         @include wrap-content('•') {
           color: $red;
         }

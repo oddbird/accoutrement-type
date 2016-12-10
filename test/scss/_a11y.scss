@@ -7,7 +7,7 @@
 @include test-module('is-hidden [mixin]') {
   @include test('clip method') {
     @include assert('Hides content with clip property') {
-      @include input {
+      @include output {
         @include is-hidden('clip');
       }
 
@@ -24,7 +24,7 @@
 
   @include test('position method') {
     @include assert('Hides content with position property') {
-      @include input {
+      @include output {
         @include is-hidden('position');
       }
 

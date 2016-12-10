@@ -43,22 +43,25 @@ $fonts: (
   'body': (
     'name': 'exo',
     'stack': ('helvetica', 'arial', sans-serif),
-    'normal': 'exo/exo2-regular-webfont',
-    'italic': 'exo/exo2-italic-webfont',
-    'bold': 'exo/exo2-bold-webfont',
-    'bold' 'italic': 'exo/exo2-bolditalic-webfont',
+    'normal': false, // set variant paths to false when using font CDNs...
+    'italic': false, // ...if you still want to document available styles
+    'bold': false,
+    'bold' 'italic': false,
   ),
 
   'alias': 'body', // create aliases when useful
 );
 ```
 
-Import one or all webfonts,
-with the `font-face` or `import-webfonts` mixins:
+Import one font at a time with `font-face()`
+or all your webfonts ar once with `import-webfonts()`:
 
 ```scss
-@include font-face('body'); // Import one font by configuration key
-@include import-webfonts; // Import all defined fonts
+// Import one font by configuration key, with custom formats
+@include font-face('body', 'otf' 'svg');
+
+// Import all defined fonts, using the same formats
+@include import-webfonts;
 ```
 
 And set your font-family anywhere,
@@ -73,3 +76,17 @@ h1, h2, h3 {
   @include font-family('heading');
 }
 ```
+
+
+Changelog
+---------
+
+### 2.1.0 — UNRELEASED
+
+- Document `$font` properties
+- Add `false` option for font-variants,
+  to allow documentation without triggering imports
+- Test remaining mixins:
+  `font-face`, `import-webfonts`, and `_import-font-face`
+
+
