@@ -8,6 +8,7 @@
   $expect: (
     'stack': ('Georgia', 'serif'),
     'normal': 'centuryoldstyle-regular-filename',
+    'italic': false,
   );
 
   @include test('Get a font directly') {
@@ -67,9 +68,41 @@
 }
 
 
-// @@@ for now we can just check for any comilation errors...
-@include _import-font-face(
-  'FranklinGothic',
-  'franklingothic-bolditalic-filename',
-  'bold' 'italic'
-  );
+// Import Font Face [mixin]
+// ------------------------
+@include test-module('Import Font Face [mixin]') {
+  @include test('Font-face import for default formats') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face('myFont', 'path/to/myFont');
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "myFont";
+          font-style: normal;
+          font-weight: normal;
+          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.ttf") format("truetype");
+        }
+      }
+    }
+  }
+
+  @include test('Font-face import for default formats') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face('myFont', 'path/to/myFont', 'bold', 'eot' 'svg');
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "myFont";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/path/to/myFont.eot") format("embedded-opentype");
+          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#myFont") format("svg");
+        }
+      }
+    }
+  }
+}

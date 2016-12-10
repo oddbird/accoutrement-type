@@ -24,8 +24,29 @@ $font-path: '../fonts/' !default;
 /// A map for managing all your fonts on a project.
 /// @group config
 /// @type Map
+/// @prop {Map} <key> -
+///   Give each font a key for access in the code,
+///   with a nested map defining the font details.
+/// @prop {String} <key>.name [<key>] -
+///   The actual name of the font-face,
+///   if it's different from the given <key>.
+/// @prop {List} <key>.stack -
+///   A list of fallback fonts
+///   for browsers that can't load the given webfont.
+/// @prop {String} <key>.<variant> -
+///   Add keys for each font-variant
+///   (normal, bold, italic, bold italic, etc):
+///   - local path values will have `$font-path` prepended,
+///     and `$font-formats` appended for loading.
+///   - `false` values will not be loaded.
+///     Use this option to document variants that will be injected by a CDN
+///     like Typekit or Google Fonts.
 /// @example scss -
 ///   $fonts: (
+///     '<key>': (
+///       '<local variant>': 'path/to-font-name',
+///       '<pathless variant>': false,
+///     ),
 ///     'sans': (
 ///       'name': 'FranklinGothic',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
@@ -87,7 +108,8 @@ $fonts: () !default;
 
 // Font Face [mixin]
 // -----------------
-/// Import any webfont defined in your `$fonts` configuration.
+/// Import any local webfont defined in your `$fonts` configuration
+/// (variants without a path will not be imported).
 /// @group fonts
 /// @param {String} $key -
 ///   The key-name of a font in your `$fonts` map.
@@ -117,7 +139,10 @@ $fonts: () !default;
   @if (length($variants) > 0) {
     @each $variant, $path in $variants {
       $variant: if(($variant == 'regular'), 'normal', $variant);
-      @include _import-font-face($name, $path, $variant, $formats);
+
+      @if $path {
+        @include _import-font-face($name, $path, $variant, $formats);
+      }
     }
   }
 }
