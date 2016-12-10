@@ -81,7 +81,7 @@ h1, h2, h3 {
 Changelog
 ---------
 
-### 2.1.0 — UNRELEASED
+### 2.1.0 — 2016.12.09
 
 - Document `$font` properties
 - Add `false` option for font-variants,
