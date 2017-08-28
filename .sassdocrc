@@ -1,9 +1,17 @@
 theme: 'herman'
-dest: gh-pages/sassdoc
+dest: docs/
 
 display:
   access:
     - public
 
 groups:
-  config: configuration
+  a11y: Accessibility
+  config: Webfont Configuration
+  fonts: Accessing Webfonts
+  pseudo: Pseudo Elements
+
+herman:
+  sass:
+    includepaths: ['sass']
+    includes: ['type']

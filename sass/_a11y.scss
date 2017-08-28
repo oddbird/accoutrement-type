@@ -7,7 +7,7 @@
 /// Hide an element by positioning it off the page.
 /// @group a11y
 /// @access private
-@mixin is-hidden--position {
+@mixin _is-hidden--position {
   left: -9999px;
   position: absolute;
   top: -9999px;
@@ -19,7 +19,7 @@
 /// Hide an element by clipping it in place.
 /// @group a11y
 /// @access private
-@mixin is-hidden--clip {
+@mixin _is-hidden--clip {
   clip: rect(1px, 1px, 1px, 1px);
   clip-path: inset(1px 1px 1px 1px);
   height: 1px;
@@ -39,8 +39,8 @@
   $method: 'clip'
 ) {
   @if $method == 'position' {
-    @include is-hidden--position;
+    @include _is-hidden--position;
   } @else {
-    @include is-hidden--clip;
+    @include _is-hidden--clip;
   }
 }
