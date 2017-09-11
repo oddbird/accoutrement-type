@@ -85,7 +85,7 @@ or all your local webfonts with `import-webfonts()`:
 ```
 
 Set your font-family anywhere,
-using the semantic names you set earlier:
+using the semantic names you defined earlier:
 
 ```scss
 html {
