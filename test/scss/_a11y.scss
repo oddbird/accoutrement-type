@@ -4,8 +4,8 @@
 
 // Is Hidden
 // ---------
-@include test-module('is-hidden [mixin]') {
-  @include test('clip method') {
+@include describe('is-hidden [mixin]') {
+  @include it('clip method') {
     @include assert('Hides content with clip property') {
       @include output {
         @include is-hidden('clip');
@@ -16,13 +16,14 @@
         clip-path: inset(1px 1px 1px 1px);
         height: 1px;
         overflow: hidden;
+        pointer-events: none;
         position: absolute;
         width: 1px;
       }
     }
   }
 
-  @include test('position method') {
+  @include it('position method') {
     @include assert('Hides content with position property') {
       @include output {
         @include is-hidden('position');
@@ -30,6 +31,7 @@
 
       @include expect {
         left: -9999px;
+        pointer-events: none;
         position: absolute;
         top: -9999px;
       }

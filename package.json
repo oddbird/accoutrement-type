@@ -2,7 +2,7 @@
   "name": "accoutrement-type",
   "version": "2.1.0",
   "description": "Sass typography and webfont utilities.",
-  "homepage": "https://github.com/oddbird/accoutrement-type",
+  "homepage": "http://oddbird.net/accoutrement-type/",
   "repository": {
     "type": "git",
     "url": "git://github.com/oddbird/accoutrement-type.git"
@@ -30,7 +30,10 @@
     "eyeglass-module"
   ],
   "eyeglass": {
-    "exports": "eyeglass-exports.js"
+    "sassDir": "sass",
+    "exports": false,
+    "name": "accoutrement-color",
+    "needs": "^1.0.0"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha",

@@ -1,7 +1,7 @@
 Accoutrement-Type
 =================
 
-Sass typography [Accoutrement][accoutrement]
+Sass typography and webfont helpers
 by [OddBird][oddbird].
 Gather all your fonts into a single map,
 access them by name,
@@ -9,62 +9,82 @@ and easily import the webfonts.
 Also includes helpers for accessibility
 and pseudo-elements.
 
-[accoutrement]: http://oddbird.net/accoutrement/
 [oddbird]: http://oddbird.net/
+
+
+More Accoutrement Tools
+-----------------------
+
+- [Init](http://oddbird.net/accoutrement-init/)
+  provides light-weight browser-normalization.
+- [Color](http://oddbird.net/accoutrement-color/)
+  provides color-palette management and contrast-ratio utilities.
+- [Scale](http://oddbird.net/accoutrement-scale/)
+  helps manage scale patterns like font-sizes, margins, and gutters.
+- [Layout](http://oddbird.net/accoutrement-layout/)
+  provides layout utilities such as
+  box-sizing, intrinsic ratios, z-index management,
+  named media-queries, and a clearfix.
 
 
 Quick Start
 -----------
 
+Install the package with npm or yarn:
+
 ```bash
 npm install accoutrement-type
+yarn add accoutrement-type
 ```
 
 Import the library:
 
 ```scss
-@import 'path/to/accoutrement-type/type';
+@import '<path-to>/accoutrement-type/sass/type';
 ```
 
 Configure your font settings:
 
 ```scss
-$font-formats: 'woff' 'ttf'; // Define what webfont formats need importing
-$font-path: '../fonts/'; // Set the a path to your fonts directory
+// Define what webfont formats need importing
+$font-formats: 'woff' 'ttf';
+
+// Set the a path to your fonts directory
+$font-path: '../fonts/';
 
 $fonts: (
-  'heading': ( // give your font a semantic name for reference
-    'name': 'maven', // optionally set a different font name
-    'stack': ('helvetica', 'arial', sans-serif), // define the stack
-    'normal': 'maven/maven_pro_regular-webfont', // point to any webfont files
+  // describe locally-hosted font-files for import and access
+  'heading': (
+    'name': 'maven',
+    'stack': ('helvetica', 'arial', sans-serif),
+    'normal': 'maven/maven_pro_regular-webfont',
     'bold': 'maven/maven_pro_bold-webfont',
   ),
 
+  // describe CDN fonts for access
   'body': (
-    'name': 'exo',
-    'stack': ('helvetica', 'arial', sans-serif),
-    'normal': false, // set variant paths to false when using font CDNs...
-    'italic': false, // ...if you still want to document available styles
-    'bold': false,
-    'bold' 'italic': false,
+    'name': 'Source Sans Pro',
+    'source': 'https://fonts.google.com/specimen/Source+Sans+Pro',
+    'stack': ('Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
   ),
 
+  // provide aliases for any font you need
   'alias': 'body', // create aliases when useful
 );
 ```
 
 Import one font at a time with `font-face()`
-or all your webfonts ar once with `import-webfonts()`:
+or all your local webfonts with `import-webfonts()`:
 
 ```scss
 // Import one font by configuration key, with custom formats
 @include font-face('body', 'otf' 'svg');
 
-// Import all defined fonts, using the same formats
+// Import all local fonts
 @include import-webfonts;
 ```
 
-And set your font-family anywhere,
+Set your font-family anywhere,
 using the semantic names you set earlier:
 
 ```scss
@@ -76,17 +96,3 @@ h1, h2, h3 {
   @include font-family('heading');
 }
 ```
-
-
-Changelog
----------
-
-### 2.1.0 — 2016.12.09
-
-- Document `$font` properties
-- Add `false` option for font-variants,
-  to allow documentation without triggering imports
-- Test remaining mixins:
-  `font-face`, `import-webfonts`, and `_import-font-face`
-
-
