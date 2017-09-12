@@ -53,7 +53,7 @@ $font-formats: 'woff' 'ttf';
 $font-path: '../fonts/';
 
 $fonts: (
-  // describe locally-hosted font-files for import and access
+  // describe locally-hosted font files for import and access
   'heading': (
     'name': 'maven',
     'stack': ('helvetica', 'arial', sans-serif),
@@ -64,7 +64,6 @@ $fonts: (
   // describe CDN fonts for access
   'body': (
     'name': 'Source Sans Pro',
-    'source': 'https://fonts.google.com/specimen/Source+Sans+Pro',
     'stack': ('Helvetica Neue', 'Helvetica', 'Arial', sans-serif),
   ),
 
