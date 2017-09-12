@@ -4,21 +4,21 @@
 
 // Font Get
 // --------
-@include test-module('Font Get [function]') {
+@include describe('Font Get [function]') {
   $expect: (
     'stack': ('Georgia', 'serif'),
     'normal': 'centuryoldstyle-regular-filename',
     'italic': false,
   );
 
-  @include test('Get a font directly') {
+  @include it('Get a font directly') {
     @include assert-equal(
       _font-get('CenturyOldStyle'),
       $expect,
       'Returns a map based on font config key');
   }
 
-  @include test('Get a font by alias') {
+  @include it('Get a font by alias') {
     @include assert-equal(
       _font-get('kevin bacon'),
       $expect,
@@ -29,8 +29,8 @@
 
 // Font Src
 // --------
-@include test-module('Font Src [function]') {
-  @include test('Build a CSS-ready item for the font src property') {
+@include describe('Font Src [function]') {
+  @include it('Build a CSS-ready item for the font src property') {
     @include assert-equal(
       _font-src('myfont', 'eot', '?#iefix'),
       font-url('myfont.eot?#iefix') format('embedded-opentype'),
@@ -41,8 +41,8 @@
 
 // Parse Font Variant
 // ------------------
-@include test-module('Parse Font Variant [function]') {
-  @include test('Single variant') {
+@include describe('Parse Font Variant [function]') {
+  @include it('Single variant') {
     $expect: (
       'style': 'normal',
       'weight': 'bold',
@@ -54,7 +54,7 @@
       'Parses a single variant, and returns normal for the other.');
   }
 
-  @include test('Multiple variants') {
+  @include it('Multiple variants') {
     $expect: (
       'style': 'italic',
       'weight': 500,
@@ -70,8 +70,8 @@
 
 // Import Font Face [mixin]
 // ------------------------
-@include test-module('Import Font Face [mixin]') {
-  @include test('Font-face import for default formats') {
+@include describe('Import Font Face [mixin]') {
+  @include it('Font-face import for default formats') {
     @include assert {
       @include output(false) {
         @include _import-font-face('myFont', 'path/to/myFont');
@@ -88,7 +88,7 @@
     }
   }
 
-  @include test('Font-face import for default formats') {
+  @include it('Font-face import for default formats') {
     @include assert {
       @include output(false) {
         @include _import-font-face('myFont', 'path/to/myFont', 'bold', 'eot' 'svg');

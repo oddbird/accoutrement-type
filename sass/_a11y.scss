@@ -9,6 +9,7 @@
 /// @access private
 @mixin _is-hidden--position {
   left: -9999px;
+  pointer-events: none;
   position: absolute;
   top: -9999px;
 }
@@ -24,6 +25,7 @@
   clip-path: inset(1px 1px 1px 1px);
   height: 1px;
   overflow: hidden;
+  pointer-events: none;
   position: absolute;
   width: 1px;
 }
