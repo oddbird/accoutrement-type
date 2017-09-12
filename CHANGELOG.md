@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-3.0.0 - UNRELEASED
-------------------
+3.0.0 - 09/12/17
+----------------
 
 - BREAKING: Use proper `::` syntax for pseudo-elements
 - BREAKING: Set `pointer-events: none` on hidden text
