@@ -1,11 +1,11 @@
 {
   "name": "accoutrement-type",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Sass typography and webfont utilities.",
   "homepage": "http://oddbird.net/accoutrement-type/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/oddbird/accoutrement-type.git"
+    "url": "https://github.com/oddbird/accoutrement-type.git"
   },
   "devDependencies": {
     "chalk": "^2.1.0",
