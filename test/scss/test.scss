@@ -5,28 +5,8 @@
 @import '../../node_modules/sass-true/sass/true';
 @import '../../sass/type';
 
-$fonts: (
-  'sans': (
-    'name': 'FranklinGothic',
-    'stack': ('Helvetica', 'Arial', 'sans-serif'),
-    'normal': 'franklingothic-regular-filename',
-    'bold': 'franklingothic-bold-filename',
-    'bold' 'italic': 'franklingothic-bolditalic-filename',
-  ),
-
-  'CenturyOldStyle': (
-    'stack': ('Georgia', 'serif'),
-    'normal': 'centuryoldstyle-regular-filename',
-    'italic': false,
-  ),
-
-  'alias': 'CenturyOldStyle',
-  'kevin bacon': 'alias',
-);
-
+@import 'config';
 @import 'helpers';
 @import 'a11y';
 @import 'fonts';
 @import 'pseudo-elements';
-
-@include report;

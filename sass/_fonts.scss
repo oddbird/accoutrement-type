@@ -2,69 +2,6 @@
 // =========
 
 
-// Font Formats
-// ------------
-/// The file formats to include when importing a font-face.
-/// @group config
-/// @type List
-$font-formats: 'woff' 'ttf' !default;
-
-
-// Font Path
-// ---------
-/// The path to your fonts directory,
-/// often relative to your output CSS.
-/// @group config
-/// @type String
-$font-path: '../fonts/' !default;
-
-
-// Fonts
-// -----
-/// A map for managing all your fonts on a project.
-/// Give each font a semantic access-key and fallback stack,
-/// and provide import url's for local font files as-needed.
-///
-/// Safely provide any extra data you need access to,
-/// since accoutrement-type will ignore unknown font properties.
-/// For example,
-/// we often include a `source` property in our font maps,
-/// providing a link to the font foundry, license, or CDN.
-/// If you are using [Herman][http://oddbird.net/herman/]
-/// to generate style-guides and font previews,
-/// it will include `source` links in the output.
-///
-/// @group config
-/// @type Map
-/// @prop {map} <key> -
-///   Give each font a key for access in the code,
-///   with a nested map defining the font details.
-/// @prop {string} <key>.name [<key>] -
-///   The actual name of the font-face,
-///   if it's different from the given <key>.
-/// @prop {list} <key>.stack -
-///   A list of fallback fonts
-///   for browsers that can't load the given webfont.
-/// @prop {string} <key>.<variant> -
-///   Add keys for each font-variant
-///   (normal, bold, italic, bold italic, etc):
-///   - local path values will have `$font-path` prepended,
-///     and `$font-formats` appended for loading.
-/// @example scss -
-///   $fonts: (
-///     'sans': (
-///       'name': 'FranklinGothic',
-///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
-///       'regular': 'franklingothic-regular-filename',
-///       'bold': 'franklingothic-bold-filename',
-///       'bold' 'italic': 'franklingothic-bolditalic-filename',
-///       // safely document any additional font data you want…
-///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans'
-///     ),
-///   );
-$fonts: () !default;
-
-
 // Font-URL [function]
 // -------------------
 /// Get a CSS-ready URL function (`url('my/path')`) with

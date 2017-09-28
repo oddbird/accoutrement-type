@@ -88,6 +88,13 @@
 
       @include expect(false) {
         @font-face {
+          font-family: "CenturyOldStyle";
+          font-style: normal;
+          font-weight: normal;
+          src: url("../fonts/centuryoldstyle-regular-filename.woff") format("woff"), url("../fonts/centuryoldstyle-regular-filename.ttf") format("truetype");
+        }
+
+        @font-face {
           font-family: "FranklinGothic";
           font-style: normal;
           font-weight: normal;
@@ -106,13 +113,6 @@
           font-style: italic;
           font-weight: bold;
           src: url("../fonts/franklingothic-bolditalic-filename.woff") format("woff"), url("../fonts/franklingothic-bolditalic-filename.ttf") format("truetype");
-        }
-
-        @font-face {
-          font-family: "CenturyOldStyle";
-          font-style: normal;
-          font-weight: normal;
-          src: url("../fonts/centuryoldstyle-regular-filename.woff") format("woff"), url("../fonts/centuryoldstyle-regular-filename.ttf") format("truetype");
         }
       }
     }
