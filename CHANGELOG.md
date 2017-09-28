@@ -1,8 +1,8 @@
 Changelog
 =========
 
-3.1.0 - UNRELEASED
-------------------
+3.1.0 - 09/28/17
+----------------
 
 - NEW: `add-font` mixin makes font-config organization simpler
 
