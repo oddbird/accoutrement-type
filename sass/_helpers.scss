@@ -82,28 +82,39 @@ $_font-format-options: (
   $path,
   $formats: $font-formats,
   $svgid: null,
-  $ie-fix: false
+  $ie-fix: false,
+  $local: ()
 ) {
   $src: ();
 
   @each $format in $formats {
-    $url: '';
-    $suffix: '';
+    $item: ();
 
-    @if ($format == 'eot') and $ie-fix {
-      $suffix: '?#iefix';
-    } @else if index(('svg', 'svgz'), $format) {
-      $suffix: '#' + $svgid;
-    }
+    @if ($format == 'local') {
+      @each $name in $local {
+        $item: append($item, local($name), 'comma');
+      }
 
-    @if (type-of($path) == 'map') {
-      $url: map-get($path, $format);
+      $src: join($src, $item, 'comma');
     } @else {
-      $url: $path;
-    }
+      $url: '';
+      $suffix: '';
 
-    $item: _font-src($url, $format, $suffix);
-    $src: append($src, $item, 'comma');
+      @if ($format == 'eot') and $ie-fix {
+        $suffix: '?#iefix';
+      } @else if index(('svg', 'svgz'), $format) {
+        $suffix: '#' + $svgid;
+      }
+
+      @if (type-of($path) == 'map') {
+        $url: map-get($path, $format);
+      } @else {
+        $url: $path;
+      }
+
+      $item: _font-src($url, $format, $suffix);
+      $src: append($src, $item, 'comma');
+    }
   }
 
   @return $src;
@@ -212,12 +223,13 @@ $_font-format-options: (
   $path,
   $variant: ('normal', 'normal'),
   $formats: null,
-  $svgid: null
+  $svgid: null,
+  $local: $name
 ) {
   $variant: _parse-font-variant($variant);
   $formats: _font-get-formats($path, $formats);
   $svgid: $svgid or $name;
-  $src: _font-src-list($path, $formats, $svgid, $ie-fix: true);
+  $src: _font-src-list($path, $formats, $svgid, 'iefix', $local);
 
   @font-face {
     font-family: quote($name);

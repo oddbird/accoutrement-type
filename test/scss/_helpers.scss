@@ -78,6 +78,19 @@
       )
     );
   }
+
+  @include it('Compiles local src when requested') {
+    $local: 'this font', 'that font';
+
+    @include assert-equal(
+      _font-src-list('path-to-font', 'local' 'woff2', $local: $local),
+      (
+        local('this font'),
+        local('that font'),
+        font-url('path-to-font.woff2') format('woff2'),
+      )
+    );
+  }
 }
 
 
@@ -206,7 +219,13 @@
   @include it('Font-face import for explicit formats') {
     @include assert {
       @include output(false) {
-        @include _import-font-face('myFont', 'path/to/myFont', 'bold', 'eot' 'svg', 'my-id');
+        @include _import-font-face(
+          'myFont',
+          'path/to/myFont',
+          'bold',
+          'local' 'eot' 'svg',
+          'my-id'
+        );
       }
 
       @include expect(false) {
@@ -215,7 +234,31 @@
           font-style: normal;
           font-weight: bold;
           src: url("../fonts/path/to/myFont.eot") format("embedded-opentype");
-          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#my-id") format("svg");
+          src: local("myFont"), url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#my-id") format("svg");
+        }
+      }
+    }
+  }
+
+  @include it('Allows a list of local name overrides') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          'myFont',
+          'path/to/myFont',
+          'bold',
+          'local',
+          'my-id',
+          'this' 'that' 'another'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "myFont";
+          font-style: normal;
+          font-weight: bold;
+          src: local("this"), local("that"), local("another");
         }
       }
     }

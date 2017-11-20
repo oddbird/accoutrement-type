@@ -95,6 +95,13 @@
         }
 
         @font-face {
+          font-family: "TestFont";
+          font-style: normal;
+          font-weight: normal;
+          src: local("local-name"), local("local name"), url("data:application/font-woff2;charset=utf-8;base64,…") format("woff2"), url("data:application/font-woff;charset=utf-8;base64,…") format("woff"), url("../fonts/path-to-svg.svgz#optionID") format("svg");
+        }
+
+        @font-face {
           font-family: "FranklinGothic";
           font-style: normal;
           font-weight: normal;

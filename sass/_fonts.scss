@@ -68,13 +68,16 @@
   $variants: _font-get-variants($font);
   $name: map-get($font, 'name') or $key;
   $svgid: map-get($font, 'svgid') or $name;
+  $local: map-get($font, 'local') or $name;
 
   @if (length($variants) > 0) {
     @each $variant, $path in $variants {
       $variant: if(($variant == 'regular'), 'normal', $variant);
 
       @if $path {
-        @include _import-font-face($name, $path, $variant, $formats, $svgid);
+        @include _import-font-face(
+          $name, $path, $variant, $formats, $svgid, $local
+        );
       }
     }
   }

@@ -5,6 +5,8 @@
 // Font Formats
 // ------------
 /// The file formats to include when importing a font-face.
+/// Use the short file-extension form for each,
+/// and optionally include 'local' to check for installed fonts.
 /// @group config
 /// @type List
 $font-formats: 'woff' 'ttf' !default;
@@ -45,6 +47,9 @@ $font-path: '../fonts/' !default;
 /// @prop {list} <key>.stack -
 ///   A list of fallback fonts
 ///   for browsers that can't load the given webfont.
+/// @prop {list} <key>.local -
+///   Names to use for `local()` installed-font src values.
+///   Will default to font `name` if undefined.
 /// @prop {string} <key>.<variant> -
 ///   Add keys for each font-variant
 ///   (normal, bold, italic, bold italic, etc).
@@ -54,12 +59,13 @@ $font-path: '../fonts/' !default;
 ///   $fonts: (
 ///     'sans': (
 ///       'name': 'FranklinGothic',
+///       'local': 'FranklinGothic' 'Franklin Gothic' 'Franklin-Gothic',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
 ///       'regular': 'franklingothic-regular-filename',
 ///       'bold': 'franklingothic-bold-filename',
 ///       'bold' 'italic': 'franklingothic-bolditalic-filename',
 ///       // safely document any additional font data you want…
-///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans'
+///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans',
 ///     ),
 ///     'uri-font': (
 ///       'name': 'My Font',
@@ -72,7 +78,7 @@ $font-path: '../fonts/' !default;
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
 ///         'woff': 'data:application/font-woff;charset=utf-8;base64,…',
 ///       ),
-///     );
+///     ),
 ///   );
 $fonts: () !default;
 

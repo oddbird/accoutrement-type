@@ -8,6 +8,18 @@ $fonts: (
     'italic': false,
   ),
 
+  'TestFont': (
+    'stack': ('Georgia', 'serif'),
+    'normal': (
+      'local': true,
+      'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
+      'woff': 'data:application/font-woff;charset=utf-8;base64,…',
+      'svgz': 'path-to-svg',
+    ),
+    'local': 'local-name' 'local name',
+    'svgid': 'optionID',
+  ),
+
   'alias': 'CenturyOldStyle',
   'kevin bacon': 'alias',
 );
