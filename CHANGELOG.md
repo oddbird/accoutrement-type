@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-3.2.0 - Unreleased
-------------------
+3.2.0-beta.1 - 11/20/17
+-----------------------
 - NEW: Add `svgid` (string) option to font maps,
   for defining an id suffix in `svg` font urls
 - NEW: Add `local` (list) option to font maps,
