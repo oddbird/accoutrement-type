@@ -4,7 +4,12 @@ Changelog
 
 3.2.0 - Unreleased
 ------------------
-- NEW: Add `svgid` option to font maps
+- NEW: Add `svgid` (string) option to font maps,
+  for defining an id suffix in `svg` font urls
+- NEW: Add `local` (list) option to font maps,
+  and allow `'local'` font-format value,
+  to output any number of given `local("font-name")` src values.
+  If the local key is undefined, we fall back to the font name.
 - NEW: Allow either string or number values
   for font-weights (e.g. `200` or `'200'` )
 - NEW: Allow font-variants to define a sub-map
