@@ -1,6 +1,18 @@
 Changelog
 =========
 
+
+3.2.0 - Unreleased
+------------------
+- NEW: Add `svgid` option to font maps
+- NEW: Allow either string or number values
+  for font-weights (e.g. `200` or `'200'` )
+- NEW: Allow font-variants to define a sub-map
+  of format/path pairs rather, than a single relative path -
+  especially useful for defining data-uri embedded fonts.
+- NEW: Format data-uri `src` values correctly
+
+
 3.1.0 - 09/28/17
 ----------------
 

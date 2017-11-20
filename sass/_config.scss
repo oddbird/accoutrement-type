@@ -47,9 +47,9 @@ $font-path: '../fonts/' !default;
 ///   for browsers that can't load the given webfont.
 /// @prop {string} <key>.<variant> -
 ///   Add keys for each font-variant
-///   (normal, bold, italic, bold italic, etc):
-///   - local path values will have `$font-path` prepended,
-///     and `$font-formats` appended for loading.
+///   (normal, bold, italic, bold italic, etc).
+///   Local path values will have `$font-path` prepended,
+///   and `$font-formats` appended for loading.
 /// @example scss -
 ///   $fonts: (
 ///     'sans': (
@@ -61,6 +61,18 @@ $font-path: '../fonts/' !default;
 ///       // safely document any additional font data you want…
 ///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans'
 ///     ),
+///     'uri-font': (
+///       'name': 'My Font',
+///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
+///       'regular': (
+///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
+///         'woff': 'data:application/font-woff;charset=utf-8;base64,…',
+///       ),
+///       'bold': (
+///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
+///         'woff': 'data:application/font-woff;charset=utf-8;base64,…',
+///       ),
+///     );
 ///   );
 $fonts: () !default;
 

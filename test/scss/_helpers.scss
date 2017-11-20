@@ -30,13 +30,116 @@
 // Font Src
 // --------
 @include describe('Font Src [function]') {
-  @include it('Build a CSS-ready item for the font src property') {
+  @include it('Builds a src-list item based on path') {
     @include assert-equal(
       _font-src('myfont', 'eot', '?#iefix'),
-      font-url('myfont.eot?#iefix') format('embedded-opentype'),
-      'Returns a combined font-src value.');
+      font-url('myfont.eot?#iefix') format('embedded-opentype')
+    );
+  }
+
+  @include it('Builds a src-list item based on dara-uri') {
+    @include assert-equal(
+      _font-src('data:application/font-ttf;charset=utf-8;base64,d09GMgABAAA', 'ttf'),
+      url('data:application/font-ttf;charset=utf-8;base64,d09GMgABAAA') format('truetype')
+    );
   }
 }
+
+
+// Font Src List
+// -------------
+@include describe('Font Src List [function]') {
+  @include it('Compiles src-format values into a src list') {
+    @include assert-equal(
+      _font-src-list('path-to-font', 'woff2' 'eot'),
+      (
+        font-url('path-to-font.woff2') format('woff2'),
+        font-url('path-to-font.eot') format('embedded-opentype'),
+      )
+    );
+  }
+
+  @include it('Adds svgid when required') {
+    @include assert-equal(
+      _font-src-list('path-to-font', 'woff2' 'svgz', $svgid: 'myID'),
+      (
+        font-url('path-to-font.woff2') format('woff2'),
+        font-url('path-to-font.svgz#myID') format('svg'),
+      )
+    );
+  }
+
+  @include it('Adds ie-fix when required') {
+    @include assert-equal(
+      _font-src-list('path-to-font', 'woff2' 'eot', $ie-fix: true),
+      (
+        font-url('path-to-font.woff2') format('woff2'),
+        font-url('path-to-font.eot?#iefix') format('embedded-opentype'),
+      )
+    );
+  }
+}
+
+
+
+// Font Get Formats
+// ----------------
+@include describe('Font Get Formats [function]') {
+  @include it('Returns explicit formats') {
+    @include assert-equal(
+      _font-get-formats('my-path', 'eot' 'ttf'),
+      'eot' 'ttf'
+    );
+  }
+
+  @include it('Returns global formats') {
+    @include assert-equal(
+      _font-get-formats('my-path', null),
+      $font-formats
+    );
+  }
+
+  @include it('Returns path-defined formats') {
+    $path: (
+      'eot': 'data:application/font-eot;charset=utf-8;base64,d09GMgABAAA',
+      'woff2': 'data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA',
+    );
+
+    @include assert-equal(
+      _font-get-formats($path, null),
+      ('eot', 'woff2')
+    );
+  }
+}
+
+
+// Font Get Variants
+// -----------------
+@include describe('Font Get Variants [function]') {
+  @include it('Filters a map to include only valid font-variant keys') {
+    $test: (
+      'name': 'anything',
+      'rando': 2,
+      'regular': 'path-to-font',
+      'bold' 'italic': ('woff': 'path', 'ttf': 'path'),
+      '400': 'path-to-font',
+      200: 'path-to-font',
+    );
+
+    $expect: (
+      'regular': 'path-to-font',
+      'bold' 'italic': ('woff': 'path', 'ttf': 'path'),
+      '400': 'path-to-font',
+      200: 'path-to-font',
+    );
+
+    @include assert-equal(
+      _font-get-variants($test),
+      $expect
+    );
+  }
+}
+
 
 
 // Parse Font Variant
@@ -50,8 +153,20 @@
 
     @include assert-equal(
       _parse-font-variant('bold'),
-      $expect,
-      'Parses a single variant, and returns normal for the other.');
+      $expect
+    );
+  }
+
+  @include it('Weight as string') {
+    $expect: (
+      'style': 'normal',
+      'weight': '200',
+    );
+
+    @include assert-equal(
+      _parse-font-variant('200'),
+      $expect
+    );
   }
 
   @include it('Multiple variants') {
@@ -62,8 +177,8 @@
 
     @include assert-equal(
       _parse-font-variant(500 'italic'),
-      $expect,
-      'Parses both style and weight variants.');
+      $expect
+    );
   }
 }
 
@@ -88,10 +203,10 @@
     }
   }
 
-  @include it('Font-face import for default formats') {
+  @include it('Font-face import for explicit formats') {
     @include assert {
       @include output(false) {
-        @include _import-font-face('myFont', 'path/to/myFont', 'bold', 'eot' 'svg');
+        @include _import-font-face('myFont', 'path/to/myFont', 'bold', 'eot' 'svg', 'my-id');
       }
 
       @include expect(false) {
@@ -100,7 +215,30 @@
           font-style: normal;
           font-weight: bold;
           src: url("../fonts/path/to/myFont.eot") format("embedded-opentype");
-          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#myFont") format("svg");
+          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#my-id") format("svg");
+        }
+      }
+    }
+  }
+
+  @include it('Font-face import for in-data formats') {
+    $path: (
+      'eot': 'data:application/font-eot;charset=utf-8;base64,d09GMgABAAA',
+      'woff2': 'data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA',
+    );
+
+    @include assert {
+      @include output(false) {
+        @include _import-font-face('myFont', $path, 'bold');
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "myFont";
+          font-style: normal;
+          font-weight: bold;
+          src: url("data:application/font-eot;charset=utf-8;base64,d09GMgABAAA") format("embedded-opentype");
+          src: url("data:application/font-eot;charset=utf-8;base64,d09GMgABAAA") format("embedded-opentype"), url("data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA") format("woff2");
         }
       }
     }

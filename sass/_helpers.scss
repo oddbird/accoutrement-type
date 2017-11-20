@@ -2,7 +2,7 @@
 // =====================
 
 $_font-style-options: 'italic' 'oblique';
-$_font-weight-options: 100 200 300 400 500 600 700 800 900 'bold';
+$_font-weight-options: '100' '200' '300' '400' '500' '600' '700' '800' '900' 'bold';
 $_font-format-options: (
   'ttf': 'truetype',
   'otf': 'opentype',
@@ -37,15 +37,125 @@ $_font-format-options: (
 // --------
 /// Get the font `src` value for a given font path and format.
 /// @access private
+/// @param {string | map} $path -
+///   Path to the font files (leaving off the file format indicator),
+///   or data-uri for font-src.
+/// @param {string} $format -
+///   Short-form (e.g. 'eot' or 'otf') of font format to import.
+/// @param {string} $suffix [''] -
+///   SVG or EOT suffix to be added to font src url.
 @function _font-src(
   $path,
   $format,
   $suffix: ''
 ) {
-  $url: $path + '.' + $format + $suffix;
-  $format: map-get($_font-format-options, $format);
+  $format-name: map-get($_font-format-options, $format);
+  $url: '';
 
-  @return font-url($url) format($format);
+  @if str-index($path, 'data:') {
+    $url: url($path);
+  } @else {
+    $url: font-url($path + '.' + $format + $suffix);
+  }
+
+  @return $url format($format-name);
+}
+
+
+// Font Src List
+// -------------
+/// Build a `src` list
+/// for one `@font-face` declaration block.
+/// @access private
+/// @param {string | map} $path -
+///   Path to the font files (leaving off the file format indicator),
+///   or map of format/path pairs.
+/// @param {List} $formats [$font-formats] -
+///   The font formats (e.g. 'ttf', 'otf', 'woff') to import.
+///   Font files will be imported in the order given.
+/// @param {string} $svgid [null] -
+///   Optional SVG ID suffix.
+///   If none is given, font `$name` will be used as fallback.
+/// @param {bool} $ie-fix [false] -
+///   Optionally add `'?#iefix'` suffix to eot src.
+@function _font-src-list(
+  $path,
+  $formats: $font-formats,
+  $svgid: null,
+  $ie-fix: false
+) {
+  $src: ();
+
+  @each $format in $formats {
+    $url: '';
+    $suffix: '';
+
+    @if ($format == 'eot') and $ie-fix {
+      $suffix: '?#iefix';
+    } @else if index(('svg', 'svgz'), $format) {
+      $suffix: '#' + $svgid;
+    }
+
+    @if (type-of($path) == 'map') {
+      $url: map-get($path, $format);
+    } @else {
+      $url: $path;
+    }
+
+    $item: _font-src($url, $format, $suffix);
+    $src: append($src, $item, 'comma');
+  }
+
+  @return $src;
+}
+
+
+// Font Get Formats
+// ----------------
+/// Return explicit formats list,
+/// with fallback to formats defined in data,
+/// or (finally) global defined `$font-formats`.
+/// @access private
+/// @param {string | map} $path -
+///   Path to the font files (leaving off the file format indicator),
+///   or map of format/path pairs.
+/// @param {List} $formats [null] -
+///   Explicit font formats (e.g. 'ttf', 'otf', 'woff') to import.
+@function _font-get-formats(
+  $path,
+  $formats: null,
+  $fallback: $font-formats
+) {
+  $has-formats: (type-of($path) == 'map');
+  $formats: $formats or if($has-formats, map-keys($path), $fallback);
+
+  @return $formats;
+}
+
+
+// Font Get Variants
+// -----------------
+/// Find all the variant key/path pairs,
+/// and return a filtered map including only font-variants.
+/// @access private
+/// @param {map} $font -
+///   A map of data for one font
+@function _font-get-variants(
+  $font
+) {
+  $var-options: join($_font-style-options, $_font-weight-options);
+  $var-options: join($var-options, ('normal', 'regular'));
+  $variants: ();
+
+  @each $key, $value in $font {
+    $first: nth($key, 1);
+
+    @if index($var-options, '' + $first) {
+      $variants: map-merge($variants, ($key: $value));
+    }
+  }
+
+  @return $variants;
 }
 
 
@@ -68,7 +178,7 @@ $_font-format-options: (
   @each $item in $variant {
     @if index($_font-style-options, $item) {
       $return: map-merge($return, ('style': $item));
-    } @else if index($_font-weight-options, $item) {
+    } @else if index($_font-weight-options, '' + $item) {
       $return: map-merge($return, ('weight': $item));
     }
   }
@@ -81,36 +191,33 @@ $_font-format-options: (
 // ------------------------
 /// A wrapper utility for the CSS `@font-face` block.
 /// @access private
-/// @param {String} $name -
+/// @param {string} $name -
 ///   The font name.
-/// @param {String} $path -
-///   Path to the font files (leaving off the file format indicator).
-/// @param {String | List} $variant [('normal', 'normal')] -
+/// @param {string | map} $path -
+///   Path to the font files (leaving off the file format indicator),
+///   or map of format/path pairs.
+/// @param {string | list} $variant [('normal', 'normal')] -
 ///   The font-style and font-weight properties.
-/// @param {List} $formats -
-///   The font formats (e.g. 'ttf', 'otf', 'woff') to import.
-///   Font files will be imported in the order given.
+/// @param {list} $formats [null] -
+///   Optional list of font formats (e.g. 'ttf', 'otf', 'woff') to import,
+///   in the order given.
+///   If formats are not explicitly given here,
+///   we fallback to formats in a path-map (if defined),
+///   or the global `$font-formats` setting.
+/// @param {string} $svgid [null] -
+///   Optional SVG ID suffix.
+///   If none is given, font `$name` will be used as fallback.
 @mixin _import-font-face(
   $name,
   $path,
   $variant: ('normal', 'normal'),
-  $formats: $font-formats
+  $formats: null,
+  $svgid: null
 ) {
   $variant: _parse-font-variant($variant);
-  $src: ();
-
-  @each $format in $formats {
-    $suffix: '';
-
-    @if ($format == 'eot') {
-      $suffix: '?#iefix';
-    } @else if index(('svg', 'svgz'), $format) {
-      $suffix: '#' + $name;
-    }
-
-    $item: _font-src($path, $format, $suffix);
-    $src: append($src, $item, 'comma');
-  }
+  $formats: _font-get-formats($path, $formats);
+  $svgid: $svgid or $name;
+  $src: _font-src-list($path, $formats, $svgid, $ie-fix: true);
 
   @font-face {
     font-family: quote($name);
@@ -119,7 +226,7 @@ $_font-format-options: (
 
     @if index($formats, 'eot') {
       // IE9 compat mode (eot)
-      src: _font-src($path, 'eot');
+      src: _font-src-list($path, 'eot');
     }
 
     // IE6-IE8 (eot) - with '?#iefix'

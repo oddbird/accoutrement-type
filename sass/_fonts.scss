@@ -57,35 +57,24 @@
 /// @group fonts
 /// @param {string} $key -
 ///   The key-name of a font in your `$fonts` map.
-/// @param {list} $formats [$font-formats] -
+/// @param {list} $formats [null] -
 ///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
 ///   Font files will be imported in the order given.
 @mixin font-face(
   $key,
-  $formats: $font-formats
+  $formats: null
 ) {
-  $var-options: join($_font-style-options, $_font-weight-options);
-  $var-options: join($var-options, ('normal', 'regular'));
   $font: _font-get($key);
-  $name: $key;
-  $variants: ();
-
-  @each $key, $value in $font {
-    $first: nth($key, 1);
-
-    @if ($first == 'name') {
-      $name: $value;
-    } @else if index($var-options, $first) {
-      $variants: map-merge($variants, ($key: $value));
-    }
-  }
+  $variants: _font-get-variants($font);
+  $name: map-get($font, 'name') or $key;
+  $svgid: map-get($font, 'svgid') or $name;
 
   @if (length($variants) > 0) {
     @each $variant, $path in $variants {
       $variant: if(($variant == 'regular'), 'normal', $variant);
 
       @if $path {
-        @include _import-font-face($name, $path, $variant, $formats);
+        @include _import-font-face($name, $path, $variant, $formats, $svgid);
       }
     }
   }
@@ -98,16 +87,16 @@
 /// @group fonts
 /// @param {map} $fonts [$fonts] -
 ///   A map of your font configuration.
-/// @param {list} $formats [$font-formats] -
+/// @param {list} $formats [null] -
 ///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
 ///   Font files will be imported in the order given.
 @mixin import-webfonts(
   $fonts: $fonts,
-  $formats: $font-formats
+  $formats: null
 ) {
   @each $key, $value in $fonts {
-    @if type-of($value) == 'map' {
-      @include font-face($key, $font-formats);
+    @if (type-of($value) == 'map') {
+      @include font-face($key, $formats);
     }
   }
 }
