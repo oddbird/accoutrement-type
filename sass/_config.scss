@@ -55,7 +55,7 @@ $font-path: '../fonts/' !default;
 ///   (normal, bold, italic, bold italic, etc).
 ///   Local path values will have `$font-path` prepended,
 ///   and `$font-formats` appended for loading.
-/// @example scss -
+/// @example scss
 ///   $fonts: (
 ///     'sans': (
 ///       'name': 'FranklinGothic',
