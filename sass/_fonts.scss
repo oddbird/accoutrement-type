@@ -12,10 +12,14 @@
 /// @return {String} -
 ///   The full path to a font file, in CSS `url('my/path')` format.
 @function font-url(
-  $path
+  $path,
+  $font-path: $font-path
 ) {
-  $full-path: quote($font-path + $path);
-  @return url($full-path);
+  @if not str-index($path, 'data:') {
+    $path: $font-path + $path;
+  }
+
+  @return url(quote($path));
 }
 
 
@@ -57,28 +61,17 @@
 /// @group fonts
 /// @param {string} $key -
 ///   The key-name of a font in your `$fonts` map.
-/// @param {list} $formats [null] -
-///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
-///   Font files will be imported in the order given.
 @mixin font-face(
-  $key,
-  $formats: null
+  $key
 ) {
   $font: _font-get($key);
   $variants: _font-get-variants($font);
   $name: map-get($font, 'name') or $key;
-  $svgid: map-get($font, 'svgid') or $name;
-  $local: map-get($font, 'local') or $name;
+  $formats: map-get($font, 'formats') or ();
 
   @if (length($variants) > 0) {
-    @each $variant, $path in $variants {
-      $variant: if(($variant == 'regular'), 'normal', $variant);
-
-      @if $path {
-        @include _import-font-face(
-          $name, $path, $variant, $formats, $svgid, $local
-        );
-      }
+    @each $variant, $data in $variants {
+      @include _import-font-face($name, $variant, $data, $formats);
     }
   }
 }
@@ -90,16 +83,12 @@
 /// @group fonts
 /// @param {map} $fonts [$fonts] -
 ///   A map of your font configuration.
-/// @param {list} $formats [null] -
-///   The font file formats (e.g. 'ttf', 'otf', 'woff') to import.
-///   Font files will be imported in the order given.
 @mixin import-webfonts(
-  $fonts: $fonts,
-  $formats: null
+  $fonts: $fonts
 ) {
   @each $key, $value in $fonts {
     @if (type-of($value) == 'map') {
-      @include font-face($key, $formats);
+      @include font-face($key);
     }
   }
 }

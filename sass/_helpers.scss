@@ -1,9 +1,28 @@
 // Internal Font Helpers
 // =====================
 
-$_font-style-options: 'italic' 'oblique';
-$_font-weight-options: '100' '200' '300' '400' '500' '600' '700' '800' '900' 'bold' 'bolder' 'lighter';
+$_font-style-options: (
+  'italic',
+  'oblique',
+);
+
+$_font-weight-options: (
+  '100',
+  '200',
+  '300',
+  '400',
+  '500',
+  '600',
+  '700',
+  '800',
+  '900',
+  'bold',
+  'bolder',
+  'lighter',
+);
+
 $_font-format-options: (
+  'local': null,
   'ttf': 'truetype',
   'otf': 'opentype',
   'woff': 'woff',
@@ -33,6 +52,31 @@ $_font-format-options: (
 }
 
 
+// Font URL
+// --------
+@function _font-url(
+  $path,
+  $format,
+  $svgid: null
+) {
+  // some formats need no adjustments
+  @if ($format == 'local') or str-index($path, 'data:') {
+    @return $path;
+  }
+
+  // add file format when needed
+  $ext: '.' + $format;
+  $ext: if(str-index($path, $ext), '', $ext);
+
+  // add svgid when needed
+  $id: str-index($format, 'svg') and $svgid and not str-index($path, '#');
+  $suffix: if($id, '#' + $svgid, '');
+
+  // compile and return
+  @return $path + $ext + $suffix;
+}
+
+
 // Font Src
 // --------
 /// Get the font `src` value for a given font path and format.
@@ -47,18 +91,14 @@ $_font-format-options: (
 @function _font-src(
   $path,
   $format,
-  $suffix: ''
+  $suffix: null
 ) {
   $format-name: map-get($_font-format-options, $format);
-  $url: '';
+  $format-name: if($format-name, format($format-name), null);
 
-  @if str-index($path, 'data:') {
-    $url: url($path);
-  } @else {
-    $url: font-url($path + '.' + $format + $suffix);
-  }
-
-  @return $url format($format-name);
+  $path: _font-url($path, $format);
+  $suffix: $suffix or '';
+  @return font-url($path + $suffix) $format-name;
 }
 
 
@@ -67,86 +107,36 @@ $_font-format-options: (
 /// Build a `src` list
 /// for one `@font-face` declaration block.
 /// @access private
-/// @param {string | map} $path -
-///   Path to the font files (leaving off the file format indicator),
-///   or map of format/path pairs.
-/// @param {List} $formats [$font-formats] -
-///   The font formats (e.g. 'ttf', 'otf', 'woff') to import.
-///   Font files will be imported in the order given.
-/// @param {string} $svgid [null] -
-///   Optional SVG ID suffix.
-///   If none is given, font `$name` will be used as fallback.
-/// @param {bool} $ie-fix [false] -
-///   Optionally add `'?#iefix'` suffix to eot src.
+/// @param {map} $data -
+///   Normalized map of format/url pairs to import.
 @function _font-src-list(
-  $path,
-  $formats: $font-formats,
-  $svgid: null,
-  $ie-fix: false,
-  $local: ()
+  $data
 ) {
   $src: ();
 
-  @each $format in $formats {
+  @each $format, $url in $data {
     $item: ();
 
     @if ($format == 'local') {
-      @each $name in $local {
-        $item: append($item, local($name), 'comma');
+      @each $name in $url {
+        $li: local($name);
+        $item: append($item, $li, 'comma');
       }
-
-      $src: join($src, $item, 'comma');
     } @else {
-      $url: '';
-      $suffix: '';
-
-      @if ($format == 'eot') and $ie-fix {
-        $suffix: '?#iefix';
-      } @else if index(('svg', 'svgz'), $format) {
-        $suffix: '#' + $svgid;
-      }
-
-      @if (type-of($path) == 'map') {
-        $url: map-get($path, $format);
-      } @else {
-        $url: $path;
-      }
-
-      $item: _font-src($url, $format, $suffix);
-      $src: append($src, $item, 'comma');
+      $li: _font-src($url, $format);
+      $item: append($item, $li, 'comma');
     }
+
+    $src: join($src, $item, 'comma');
   }
 
   @return $src;
 }
 
 
-// Font Get Formats
-// ----------------
-/// Return explicit formats list,
-/// with fallback to formats defined in data,
-/// or (finally) global defined `$font-formats`.
-/// @access private
-/// @param {string | map} $path -
-///   Path to the font files (leaving off the file format indicator),
-///   or map of format/path pairs.
-/// @param {List} $formats [null] -
-///   Explicit font formats (e.g. 'ttf', 'otf', 'woff') to import.
-@function _font-get-formats(
-  $path,
-  $formats: null,
-  $fallback: $font-formats
-) {
-  $has-formats: (type-of($path) == 'map');
-  $formats: $formats or if($has-formats, map-keys($path), $fallback);
-
-  @return $formats;
-}
-
-
 // Font Get Variants
 // -----------------
-/// Find all the variant key/path pairs,
+/// Find all the variant key/data pairs,
 /// and return a filtered map including only font-variants.
 /// @access private
 /// @param {map} $font -
@@ -155,13 +145,15 @@ $_font-format-options: (
   $font
 ) {
   $var-options: join($_font-style-options, $_font-weight-options);
-  $var-options: join($var-options, ('normal', 'regular'));
+  $var-options: append($var-options, 'normal');
   $variants: ();
 
   @each $key, $value in $font {
-    $first: nth($key, 1);
+    // get the first setting, and make sure it's a string…
+    $first: '' + nth($key, 1);
 
-    @if index($var-options, '' + $first) {
+    // if it's a variant, add it to the list…
+    @if index($var-options, $first) {
       $variants: map-merge($variants, ($key: $value));
     }
   }
@@ -170,15 +162,15 @@ $_font-format-options: (
 }
 
 
-// Parse Font Variant
-// -------------------
+// Parse Variant Name
+// ------------------
 /// Parse a list of font variants into a map of styles and weights.
 /// @access private
 /// @param {List} $variant -
 ///   A list of font variants, such as `('bold', 'italic')`.
 /// @return {$map} -
 ///   A map of `style` and `weight` values.
-@function _parse-font-variant(
+@function _parse-variant-name(
   $variant
 ) {
   $return: (
@@ -198,53 +190,99 @@ $_font-format-options: (
 }
 
 
+// Normalize Variant Data
+// ----------------------
+@function _normalize-variant-data(
+  $data,
+  $formats: ()
+) {
+  @if (type-of($data) == 'string') {
+    $data: (
+      'path': $data
+    )
+  }
+
+  // Interpolate implicit paths
+  $path: map-get($data, 'path');
+  $svgid: map-get($data, 'svgid');
+  $implicit: ();
+
+  @if $path {
+    @if (length($formats) > 0) {
+      @each $format in $formats {
+        $url: _font-url($path, $format, $svgid);
+        $implicit: map-merge($implicit, ($format: $url));
+      }
+    } @else {
+      @return 'format-error';
+    }
+  }
+
+  // Extract explicit paths
+  $explicit: ();
+
+  @each $key, $value in $data {
+    @if map-has-key($_font-format-options, $key) {
+      $url: _font-url($value, $key, $svgid);
+      $explicit: map-merge($explicit, ($key: $url));
+    }
+  }
+
+  // Merge twice to get proper order and overrides…
+  $implicit: map-merge($explicit, $implicit);
+  @return map-merge($implicit, $explicit);
+}
+
+
+
 // Import Font-Face [mixin]
 // ------------------------
 /// A wrapper utility for the CSS `@font-face` block.
 /// @access private
 /// @param {string} $name -
 ///   The font name.
-/// @param {string | map} $path -
+/// @param {string | list} $variant -
+///   The font-style and font-weight properties.
+/// @param {string | map} $data -
 ///   Path to the font files (leaving off the file format indicator),
 ///   or map of format/path pairs.
-/// @param {string | list} $variant [('normal', 'normal')] -
-///   The font-style and font-weight properties.
 /// @param {list} $formats [null] -
 ///   Optional list of font formats (e.g. 'ttf', 'otf', 'woff') to import,
 ///   in the order given.
 ///   If formats are not explicitly given here,
-///   we fallback to formats in a path-map (if defined),
-///   or the global `$font-formats` setting.
+///   we fallback to formats in a data-map.
 /// @param {string} $svgid [null] -
 ///   Optional SVG ID suffix.
 ///   If none is given, font `$name` will be used as fallback.
 @mixin _import-font-face(
   $name,
-  $path,
-  $variant: ('normal', 'normal'),
-  $formats: null,
-  $svgid: null,
-  $local: $name
+  $variant,
+  $data,
+  $formats: ()
 ) {
-  $variant: _parse-font-variant($variant);
-  $formats: _font-get-formats($path, $formats);
-  $svgid: $svgid or $name;
-  $src: _font-src-list($path, $formats, $svgid, 'iefix', $local);
+  $variant: _parse-variant-name($variant);
+  $data: _normalize-variant-data($data, $formats);
+
+  @if ($data == 'format-error') {
+    @error '(#{$name}) Font-path interpolation ' +
+    'requires a list of `formats` to import.';
+  }
 
   @font-face {
     font-family: quote($name);
     font-style: unquote(map-get($variant, 'style'));
     font-weight: unquote(map-get($variant, 'weight'));
 
-    @if index($formats, 'eot') {
+    $eot: map-get($data, 'eot');
+    @if $eot {
       // IE9 compat mode (eot)
-      src: _font-src-list($path, 'eot');
+      src: _font-src($eot, 'eot', '?#iefix');
     }
 
     // IE6-IE8 (eot) - with '?#iefix'
     // Modern Browsers (woff, woff2)
     // Safari, Android, iOS (ttf, otf)
     // Legacy iOS (svg, svgz) - with '#svgName'
-    src: $src;
+    src: _font-src-list($data);
   }
 }

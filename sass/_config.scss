@@ -2,16 +2,6 @@
 // ==================
 
 
-// Font Formats
-// ------------
-/// The file formats to include when importing a font-face.
-/// Use the short file-extension form for each,
-/// and optionally include 'local' to check for installed fonts.
-/// @group config
-/// @type List
-$font-formats: 'woff' 'ttf' !default;
-
-
 // Font Path
 // ---------
 /// The path to your fonts directory,
@@ -59,7 +49,6 @@ $font-path: '../fonts/' !default;
 ///   $fonts: (
 ///     'sans': (
 ///       'name': 'FranklinGothic',
-///       'local': 'FranklinGothic' 'Franklin Gothic' 'Franklin-Gothic',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
 ///       'regular': 'franklingothic-regular-filename',
 ///       'bold': 'franklingothic-bold-filename',
@@ -72,11 +61,9 @@ $font-path: '../fonts/' !default;
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
 ///       'regular': (
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
-///         'woff': 'data:application/font-woff;charset=utf-8;base64,…',
 ///       ),
 ///       'bold': (
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
-///         'woff': 'data:application/font-woff;charset=utf-8;base64,…',
 ///       ),
 ///     ),
 ///   );

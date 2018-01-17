@@ -5,15 +5,11 @@
 // Font Get
 // --------
 @include describe('Font Get [function]') {
-  $expect: (
-    'stack': ('Georgia', 'serif'),
-    'normal': 'centuryoldstyle-regular-filename',
-    'italic': false,
-  );
+  $expect: map-get($fonts, 'body-font');
 
   @include it('Get a font directly') {
     @include assert-equal(
-      _font-get('CenturyOldStyle'),
+      _font-get('body-font'),
       $expect,
       'Returns a map based on font config key');
   }
@@ -27,12 +23,77 @@
 }
 
 
+// Font URL
+// --------
+@include describe('_Font URL [function]') {
+  @include it('Returns base64 data with no changes') {
+    $data: 'data:application/x-font-woff;charset=utf-8;base64...';
+    @include assert-equal(
+      _font-url($data, 'woff'),
+      $data
+    );
+  }
+
+  @include it('Returns local names with no changes') {
+    $local: 'this' 'and that';
+    @include assert-equal(
+      _font-url($local, 'local'),
+      $local
+    );
+  }
+
+  @include it('Adds file format extension when needed') {
+    @include assert-equal(
+      _font-url('this-file', 'ttf'),
+      'this-file.ttf'
+    );
+
+    @include assert-equal(
+      _font-url('this-file.ttf', 'ttf'),
+      'this-file.ttf',
+      'no change when extension is provided'
+    );
+  }
+
+  @include it('Adds svgid when needed') {
+    @include assert-equal(
+      _font-url('this-file', 'svgz', 'myID'),
+      'this-file.svgz#myID'
+    );
+
+    @include assert-equal(
+      _font-url('this-file.svg', 'svg', 'myID'),
+      'this-file.svg#myID'
+    );
+
+    @include assert-equal(
+      _font-url('this-file', 'ttf', 'myID'),
+      'this-file.ttf',
+      'no change when wrong file type'
+    );
+
+    @include assert-equal(
+      _font-url('this-file.svg#myOtherID', 'svg', 'myID'),
+      'this-file.svg#myOtherID',
+      'no change when hash exists'
+    );
+  }
+}
+
+
 // Font Src
 // --------
 @include describe('Font Src [function]') {
-  @include it('Builds a src-list item based on path') {
+  @include it('Builds a src-list item based on path interpolation') {
     @include assert-equal(
       _font-src('myfont', 'eot', '?#iefix'),
+      font-url('myfont.eot?#iefix') format('embedded-opentype')
+    );
+  }
+
+  @include it('Builds a src-list item based on explicit path') {
+    @include assert-equal(
+      _font-src('myfont.eot', 'eot', '?#iefix'),
       font-url('myfont.eot?#iefix') format('embedded-opentype')
     );
   }
@@ -49,81 +110,29 @@
 // Font Src List
 // -------------
 @include describe('Font Src List [function]') {
-  @include it('Compiles src-format values into a src list') {
-    @include assert-equal(
-      _font-src-list('path-to-font', 'woff2' 'eot'),
-      (
-        font-url('path-to-font.woff2') format('woff2'),
-        font-url('path-to-font.eot') format('embedded-opentype'),
-      )
+  @include it('Builds a `src` list from variant data') {
+    $variant: (
+      'local': 'source-sans-pro-bold' 'Source Sans Pro bold',
+      'woff2': 'sourcesanspro-bold-webfont.woff2',
+      'woff': 'data:application/x-font-woff;charset=utf-8;base64...',
+      'eot': 'sourcesanspro-bold-webfont',
     );
-  }
 
-  @include it('Adds svgid when required') {
-    @include assert-equal(
-      _font-src-list('path-to-font', 'woff2' 'svgz', $svgid: 'myID'),
-      (
-        font-url('path-to-font.woff2') format('woff2'),
-        font-url('path-to-font.svgz#myID') format('svg'),
-      )
+    $src: (
+      local('source-sans-pro-bold'),
+      local('Source Sans Pro bold'),
+      url('../fonts/sourcesanspro-bold-webfont.woff2') format('woff2'),
+      url('data:application/x-font-woff;charset=utf-8;base64...') format('woff'),
+      url('../fonts/sourcesanspro-bold-webfont.eot') format('embedded-opentype'),
     );
-  }
-
-  @include it('Adds ie-fix when required') {
-    @include assert-equal(
-      _font-src-list('path-to-font', 'woff2' 'eot', $ie-fix: true),
-      (
-        font-url('path-to-font.woff2') format('woff2'),
-        font-url('path-to-font.eot?#iefix') format('embedded-opentype'),
-      )
-    );
-  }
-
-  @include it('Compiles local src when requested') {
-    $local: 'this font', 'that font';
 
     @include assert-equal(
-      _font-src-list('path-to-font', 'local' 'woff2', $local: $local),
-      (
-        local('this font'),
-        local('that font'),
-        font-url('path-to-font.woff2') format('woff2'),
-      )
+      _font-src-list($variant),
+      $src
     );
   }
 }
 
-
-
-// Font Get Formats
-// ----------------
-@include describe('Font Get Formats [function]') {
-  @include it('Returns explicit formats') {
-    @include assert-equal(
-      _font-get-formats('my-path', 'eot' 'ttf'),
-      'eot' 'ttf'
-    );
-  }
-
-  @include it('Returns global formats') {
-    @include assert-equal(
-      _font-get-formats('my-path', null),
-      $font-formats
-    );
-  }
-
-  @include it('Returns path-defined formats') {
-    $path: (
-      'eot': 'data:application/font-eot;charset=utf-8;base64,d09GMgABAAA',
-      'woff2': 'data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA',
-    );
-
-    @include assert-equal(
-      _font-get-formats($path, null),
-      ('eot', 'woff2')
-    );
-  }
-}
 
 
 // Font Get Variants
@@ -133,14 +142,14 @@
     $test: (
       'name': 'anything',
       'rando': 2,
-      'regular': 'path-to-font',
+      'normal': 'something',
       'bold' 'italic': ('woff': 'path', 'ttf': 'path'),
       '400': 'path-to-font',
       200: 'path-to-font',
     );
 
     $expect: (
-      'regular': 'path-to-font',
+      'normal': 'something',
       'bold' 'italic': ('woff': 'path', 'ttf': 'path'),
       '400': 'path-to-font',
       200: 'path-to-font',
@@ -155,9 +164,9 @@
 
 
 
-// Parse Font Variant
+// Parse Variant Name
 // ------------------
-@include describe('Parse Font Variant [function]') {
+@include describe('Parse Variant Name [function]') {
   @include it('Single variant') {
     $expect: (
       'style': 'normal',
@@ -165,7 +174,7 @@
     );
 
     @include assert-equal(
-      _parse-font-variant('bold'),
+      _parse-variant-name('bold'),
       $expect
     );
   }
@@ -177,7 +186,7 @@
     );
 
     @include assert-equal(
-      _parse-font-variant('200'),
+      _parse-variant-name('200'),
       $expect
     );
   }
@@ -189,8 +198,91 @@
     );
 
     @include assert-equal(
-      _parse-font-variant(500 'italic'),
+      _parse-variant-name(500 'italic'),
       $expect
+    );
+  }
+}
+
+
+// Normalize Variant Data
+// ----------------------
+@include describe('Normalize Variant Data [function]') {
+  @include it('Errors with path but no formats') {
+    @include assert-equal(
+      _normalize-variant-data(
+        $data: 'my/path',
+        $formats: ()
+      ),
+      'format-error'
+    );
+  }
+
+  @include it('Interpolates a string and formats') {
+    @include assert-equal(
+      _normalize-variant-data(
+        $data: 'my/path',
+        $formats: 'woff' 'ttf'
+      ),
+      (
+        'woff': 'my/path.woff',
+        'ttf': 'my/path.ttf',
+      )
+    );
+  }
+
+  @include it('Interpolates a map and formats') {
+    @include assert-equal(
+      _normalize-variant-data(
+        $data: (
+          'path': 'my/path',
+          'svgid': 'myID',
+        ),
+        $formats: 'woff' 'svg'
+      ),
+      (
+        'woff': 'my/path.woff',
+        'svg': 'my/path.svg#myID',
+      )
+    );
+  }
+
+  @include it('Explicit settings override path & svgid') {
+    $test: _normalize-variant-data(
+      $data: (
+        'path': 'my/path',
+        'local': 'hello',
+        'ttf': 'my/ttf/path',
+        'svg': 'svg/path/to.svg#newID',
+        'svgid': 'myID',
+      ),
+      $formats: 'woff' 'svg'
+    );
+
+    $expect: (
+      'local': 'hello',
+      'ttf': 'my/ttf/path.ttf',
+      'svg': 'svg/path/to.svg#newID',
+      'woff': 'my/path.woff',
+    );
+
+    @include assert-equal($test, $expect);
+
+    @for $i from 1 through length($expect) {
+      @include assert-equal(
+        nth(map-keys($test), $i),
+        nth(map-keys($expect), $i),
+        'Maps should have the same key order'
+      );
+    }
+  }
+
+  @include it('Leaves local list as-is') {
+    @include assert-equal(
+      _normalize-variant-data(
+        $data: ('local': 'this' 'another')
+      ),
+      ('local': 'this' 'another')
     );
   }
 }
@@ -199,89 +291,120 @@
 // Import Font Face [mixin]
 // ------------------------
 @include describe('Import Font Face [mixin]') {
-  @include it('Font-face import for default formats') {
-    @include assert {
-      @include output(false) {
-        @include _import-font-face('myFont', 'path/to/myFont');
-      }
-
-      @include expect(false) {
-        @font-face {
-          font-family: "myFont";
-          font-style: normal;
-          font-weight: normal;
-          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.ttf") format("truetype");
-        }
-      }
-    }
-  }
-
-  @include it('Font-face import for explicit formats') {
+  @include it('Creates a font-face import interpolating path & format') {
     @include assert {
       @include output(false) {
         @include _import-font-face(
-          'myFont',
-          'path/to/myFont',
-          'bold',
-          'local' 'eot' 'svg',
-          'my-id'
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: 'path/to/myFont',
+          $formats: 'woff' 'svg'
         );
       }
 
       @include expect(false) {
         @font-face {
-          font-family: "myFont";
+          font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("../fonts/path/to/myFont.eot") format("embedded-opentype");
-          src: local("myFont"), url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"), url("../fonts/path/to/myFont.svg#my-id") format("svg");
+          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg") format("svg");
         }
       }
     }
   }
 
-  @include it('Allows a list of local name overrides') {
+  @include it('Alows local font src') {
     @include assert {
       @include output(false) {
         @include _import-font-face(
-          'myFont',
-          'path/to/myFont',
-          'bold',
-          'local',
-          'my-id',
-          'this' 'that' 'another'
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'local': 'this' 'another one',
+            'woff': 'path/to/myFont',
+          )
         );
       }
 
       @include expect(false) {
         @font-face {
-          font-family: "myFont";
+          font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: local("this"), local("that"), local("another");
+          src: local('this'), local('another one'), url("../fonts/path/to/myFont.woff") format("woff");
         }
       }
     }
   }
 
-  @include it('Font-face import for in-data formats') {
-    $path: (
-      'eot': 'data:application/font-eot;charset=utf-8;base64,d09GMgABAAA',
-      'woff2': 'data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA',
-    );
-
+  @include it('Adds svgid when provided and needed') {
     @include assert {
       @include output(false) {
-        @include _import-font-face('myFont', $path, 'bold');
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'path': 'path/to/myFont',
+            'svgid': 'myID',
+          ),
+          $formats: 'woff' 'svg'
+        );
       }
 
       @include expect(false) {
         @font-face {
-          font-family: "myFont";
+          font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("data:application/font-eot;charset=utf-8;base64,d09GMgABAAA") format("embedded-opentype");
-          src: url("data:application/font-eot;charset=utf-8;base64,d09GMgABAAA") format("embedded-opentype"), url("data:application/font-woff2;charset=utf-8;base64,d09GMgABAAA") format("woff2");
+          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg#myID") format("svg");
+        }
+      }
+    }
+  }
+
+  @include it('Explicit settings override implicit settings') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'path': 'path/to/myFont',
+            'woff': 'different/to/myFont.woff',
+          ),
+          $formats: 'woff' 'svg'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/different/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg") format("svg");
+        }
+      }
+    }
+  }
+
+  @include it('Special handling for eot files') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: 'path/to/myFont',
+          $formats: 'woff' 'eot'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype");
+          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.eot") format("embedded-opentype");
         }
       }
     }
