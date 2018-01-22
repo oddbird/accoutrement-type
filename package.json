@@ -1,5 +1,6 @@
 {
   "name": "accoutrement-type",
+  "title": "Accoutrement Type",
   "version": "3.2.0-beta.1",
   "description": "Sass typography and webfont utilities.",
   "homepage": "http://oddbird.net/accoutrement-type/",
@@ -16,7 +17,7 @@
     "mocha": "^4.1.0",
     "sass-true": "^3.0.0",
     "sassdoc": "^2.5.0",
-    "sassdoc-theme-herman": "^1.0.1"
+    "sassdoc-theme-herman": "^1.1.0"
   },
   "author": "Miriam Suzanne <miriam@oddbird.net>",
   "license": "MIT",

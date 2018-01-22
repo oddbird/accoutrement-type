@@ -6,28 +6,57 @@
 // ---------
 /// The path to your fonts directory,
 /// often relative to your output CSS.
+///
+/// This base-path will be added to the start of
+/// every relative font-path given in your `$fonts` map -
+/// an optional shortcut to keep from writing
+/// long and repetative paths for every font.
+///
+/// @since 3.2.0 -
+///   The default changed from `'../fonts/'` to `''` --
+///   so that no path is added unless explicity requested.
+///
 /// @group config
-/// @type String
-$font-path: '../fonts/' !default;
+/// @type string
+///
+/// @example scss
+///   $font-path: '../fonts/';
+$font-path: '' !default;
 
 
 // Fonts
 // -----
 /// A map for managing all your fonts on a project.
-/// Give each font a semantic access-key and fallback stack,
-/// and provide import url's for local font files as-needed.
+/// By storing this font data in map format,
+/// we can automate `@font-face` imports,
+/// call fonts with a semantic access-key,
+/// define fallback font-stacks,
+/// and genrate font specimens with a tool like [Herman].
 ///
-/// Safely provide any extra data you need access to,
-/// since accoutrement-type will ignore unknown font properties.
+/// [Herman]: http://oddbird.net/herman/
+///
+/// All the provided tools will ignore unknown font properties,
+/// so you can safely include any extra data you need access to.
 /// For example,
 /// we often include a `source` property in our font maps,
 /// providing a link to the font foundry, license, or CDN.
-/// If you are using [Herman][http://oddbird.net/herman/]
-/// to generate style-guides and font previews,
+/// If you are using [Herman] to font previews,
 /// it will include `source` links in the output.
+///
+/// @since 3.2.0 -
+///   - Remove the `$font-formats` variable,
+///     and replaced it with a `formats` property
+///     in each individual font map.
+///   - Allow explicit configuration maps for each font variant,
+///     to support variant-specific `local` and `svgid` options,
+///     along with the ability to specificy
+///     explicit urls for each format desired.
+///     The old string value will be treated the same as
+///     a map with only `'path'` defined.
 ///
 /// @group config
 /// @type Map
+///
 /// @prop {map} <key> -
 ///   Give each font a key for access in the code,
 ///   with a nested map defining the font details.
@@ -37,32 +66,88 @@ $font-path: '../fonts/' !default;
 /// @prop {list} <key>.stack -
 ///   A list of fallback fonts
 ///   for browsers that can't load the given webfont.
-/// @prop {list} <key>.local -
-///   Names to use for `local()` installed-font src values.
-///   Will default to font `name` if undefined.
-/// @prop {string} <key>.<variant> -
-///   Add keys for each font-variant
-///   (normal, bold, italic, bold italic, etc).
-///   Local path values will have `$font-path` prepended,
-///   and `$font-formats` appended for loading.
-/// @example scss
+/// @prop {list} <key>.formats -
+///   A list of font formats
+///   (e.g. `'woff2' 'eot'`)
+///   to use when interpolating font-file paths
+///   for font-face imported fonts.
+///   Formats will be imported in the order given.
+/// @prop {string | map} <key>.<variant> -
+///   When describing locally-hosted or data-embedded fonts,
+///   provide a key for each font-variant to import.
+///   Multi-word variants should be written as a list
+///   (`'bold' 'italic'`),
+///   rather than a single string
+///   (`'bold italic'`).
+///
+///   - In the simplest use-case,
+///     this can be a string:
+///     a generic path to the appropriate font-files
+///     (`'path/to/my-font-bold'`) with file-extensions removed.
+///     We'll add extensions for you,
+///     based on the `formats` setting.
+///
+///   - For more control over individual variants and formats,
+///     we also accept a map value.
+///     See the `<key>.<variant>.<??>` properties below…
+/// @prop {list} <key>.<variant>.path -
+///   An optional string defining the font-path
+///   to interpolate for each given `formats`.
+///   This is the same as providing a string variant-path.
+/// @prop {list} <key>.<variant>.local -
+///   A list of names (strings) to use for `local()` font-src values.
+/// @prop {list} <key>.<variant>.svgid -
+///   Fragment identifier for svg fonts,
+///   to be appended on relevant import URLs.
+/// @prop {list} <key>.<variant>.<format> -
+///   Optionally provide individual font-path overrides,
+///   or base64 data-URIs for specific formats.
+///   Formats will be imported in the order defined.
+/// @example scss - Defining a font for import
 ///   $fonts: (
 ///     'sans': (
-///       'name': 'FranklinGothic',
+///       'name': 'Museo Sans',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
-///       'regular': 'franklingothic-regular-filename',
-///       'bold': 'franklingothic-bold-filename',
-///       'bold' 'italic': 'franklingothic-bolditalic-filename',
+///       'formats': ('woff2', 'woff', 'ttf'),
+///       'regular': 'museosans-regular-filename',
+///       'bold': 'museosans-bold-filename',
+///       'bold' 'italic': 'museosans-bolditalic-filename',
 ///       // safely document any additional font data you want…
 ///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans',
 ///     ),
+///   );
+/// @example scss - Creating a secondary font alias
+///   // Create alias keys to provide more semantic naming as-needed.
+///   $fonts: (
+///     'body-font': 'sans',
+///   );
+/// @example scss - Setting explicit format-paths
+///   $fonts: (
+///     'sans': (
+///       'name': 'Museo Sans',
+///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
+///       'bold': (
+///         'woff2': 'museosans-bold-woff2-path',
+///         'svg': 'museosans-bold-svg-path',
+///         'svgid': '#museosans',
+///       ),
+///       'bold' 'italic': (
+///         'woff2': 'museosans-bolditalic-woff2-path',
+///         'svg': 'museosans-bolditalic-svg-path.svg#museosans-bolditalic',
+///       ),
+///     ),
+///   );
+/// @example scss - Base64 data-uri's and `local()` src
+///   $fonts: (
 ///     'uri-font': (
 ///       'name': 'My Font',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
 ///       'regular': (
+///         'local': ('My Font', 'my-font-regular'),
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
 ///       ),
 ///       'bold': (
+///         'local': ('My Font Bold', 'my-font-bold'),
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
 ///       ),
 ///     ),
@@ -73,11 +158,15 @@ $fonts: () !default;
 
 // Add Font
 // --------
-/// Merge individual font maps into the global `$fonts` variable.
+/// In order to keep our `$fonts` map more manageable,
+/// we define individual map variables for each font,
+/// and use a mixin to merge them together
+/// into our global `$fonts` configuration.
+///
 /// This can be useful for internal organization,
-/// documentation with [SassDoc][SassDoc],
-/// or integration with our pattern-library generator:
-/// [Herman][Herman].
+/// documentation with [SassDoc],
+/// or integration with a pattern-library generator like
+/// [Herman].
 ///
 /// [SassDoc]: http://sassdoc.com/
 /// [Herman]: http://oddbird.net/herman/
@@ -85,12 +174,11 @@ $fonts: () !default;
 /// @group config
 ///
 /// @parameter {map} $key -
-///   Give your font a semantic name
-///   for easy access across your project.
+///   Give your font a semantic access-key
+///   for easy reference across your project.
 /// @parameter {map} $map -
-///   Pass any number of maps to be merged.
-/// @output -
-///   An updated global `$fonts` variable,
+///   Map of font-data to be added at the given key.
+/// @output An updated global `$fonts` variable,
 ///   with new maps merged in.
 ///
 /// @example scss

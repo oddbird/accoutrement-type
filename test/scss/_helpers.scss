@@ -23,6 +23,25 @@
 }
 
 
+// Font Name
+// ---------
+@include describe('Font Name [function]') {
+  @include it('Get a font directly') {
+    @include assert-equal(
+      _font-name('TestFont'),
+      'TestFont',
+      'Returns the given key if acts as a font name');
+  }
+
+  @include it('Get a font by alias') {
+    @include assert-equal(
+      _font-name('kevin bacon'),
+      'Source Sans Pro',
+      'Finds the font-name through alias and explicit name properties');
+  }
+}
+
+
 // Font URL
 // --------
 @include describe('_Font URL [function]') {
@@ -62,7 +81,7 @@
     );
 
     @include assert-equal(
-      _font-url('this-file.svg', 'svg', 'myID'),
+      _font-url('this-file.svg', 'svg', '#myID'),
       'this-file.svg#myID'
     );
 

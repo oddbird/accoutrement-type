@@ -1,11 +1,25 @@
 // Internal Font Helpers
 // =====================
 
+
+// Font Style Options
+// ------------------
+/// A constant list of valid font-style settings
+/// (not including `normal`, which is also a valid weight).
+/// @access private
+/// @group font-helpers
 $_font-style-options: (
   'italic',
   'oblique',
 );
 
+
+// Font Weight Options
+// -------------------
+/// A constant list of valid font-weight settings
+/// (not including `normal`, which is also a valid style).
+/// @access private
+/// @group font-helpers
 $_font-weight-options: (
   '100',
   '200',
@@ -21,6 +35,13 @@ $_font-weight-options: (
   'lighter',
 );
 
+
+// Font Weight Options
+// -------------------
+/// A constant map of valid font formats,
+/// with their file extension and full `format()` name.
+/// @access private
+/// @group font-helpers
 $_font-format-options: (
   'local': null,
   'ttf': 'truetype',
@@ -35,8 +56,21 @@ $_font-format-options: (
 
 // Font Get
 // --------
-/// Get a font from the `$fonts` map.
+/// Get a font from the `$fonts` map,
+/// based on font access-key.
+/// This is similar to the Sass `map-get()` function,
+/// but the map is always your global `$fonts` map,
+/// and we allow internal alias references -
+/// so that multiple keys can be used for a single font.
+///
 /// @access private
+/// @group font-helpers
+///
+/// @param $key -
+///   The font access-key defined in your `$fonts` map,
+///   or an alias key that redirects to the appropriate font.
+/// @return {map} -
+///   Map of all the font-data associated with the given key.
 @function _font-get(
   $key
 ) {
@@ -52,13 +86,69 @@ $_font-format-options: (
 }
 
 
+// Font Name
+// ---------
+/// Get a font-name from the `$fonts` map,
+/// based on font access-key.
+/// This is similar to the `_font-get()` function,
+/// but returns only the name of the font.
+///
+/// @access private
+/// @group font-helpers
+///
+/// @param $key -
+///   The font access-key defined in your `$fonts` map,
+///   or an alias key that redirects to the appropriate font.
+/// @return {string} -
+///   The font-name associated with the given key.
+@function _font-name(
+  $key
+) {
+  $font: map-get($fonts, $key);
+
+  @if not $font {
+    @error '#{$key} is not defined in your `$fonts` configuration map.';
+  } @else if map-has-key($fonts, $font) {
+    $font: _font-name($font);
+  }
+
+  $font-name: if((type-of($font) == 'map'), map-get($font, 'name'), $font);
+  @return $font-name or $key;
+}
+
+
 // Font URL
 // --------
+/// Interpolate a font path and format-type
+/// to create the proper font-src import URL.
+/// This private function does not prepend any global `$font-path`,
+/// leaving that to the public [`font-url()`][font-url] function.
+///
+/// [font-url]: fonts.html#function--font-url
+///
+/// @access private
+/// @group font-helpers
+///
+/// @param {string} $path -
+///   The base path for this font and format.
+///   If no file extension is included,
+///   we add one based on the format desired.
+///   Local and base64 font names & URI's are returned without any change.
+/// @param {string} $format -
+///   Short-form of the format to import, e.g. `woff` or `eot`.
+/// @param {string} $svgid -
+///   SVG fragment-identifier to append on svg fonts.
+///   The initial `#` character is optional,
+///   and will be added when missing.
+/// @return {string} -
+///   Font-format URL for importing.
 @function _font-url(
   $path,
   $format,
   $svgid: null
 ) {
+  $suffix: '';
+
   // some formats need no adjustments
   @if ($format == 'local') or str-index($path, 'data:') {
     @return $path;
@@ -69,8 +159,9 @@ $_font-format-options: (
   $ext: if(str-index($path, $ext), '', $ext);
 
   // add svgid when needed
-  $id: str-index($format, 'svg') and $svgid and not str-index($path, '#');
-  $suffix: if($id, '#' + $svgid, '');
+  @if str-index($format, 'svg') and ($svgid) and (not str-index($path, '#')) {
+    $suffix: if(str-index($svgid, '#'), $svgid, '#' + $svgid);
+  }
 
   // compile and return
   @return $path + $ext + $suffix;
@@ -79,22 +170,28 @@ $_font-format-options: (
 
 // Font Src
 // --------
-/// Get the font `src` value for a given font path and format.
+/// Get the font `src` value for a given font path and format,
+/// including both `url()` and `format()`.
+///
 /// @access private
+/// @group font-helpers
+///
 /// @param {string | map} $path -
 ///   Path to the font files (leaving off the file format indicator),
 ///   or data-uri for font-src.
 /// @param {string} $format -
-///   Short-form (e.g. 'eot' or 'otf') of font format to import.
-/// @param {string} $suffix [''] -
-///   SVG or EOT suffix to be added to font src url.
+///   Short-form (e.g. 'eot' or 'otf') font-format to import.
+/// @param {string} $suffix [null] -
+///   SVG or EOT-iefix suffix to be added to font url.
+/// @return {list} -
+///   CSS-ready `url() format()` combination for font-face `src` output.
 @function _font-src(
   $path,
   $format,
   $suffix: null
 ) {
   $format-name: map-get($_font-format-options, $format);
-  $format-name: if($format-name, format($format-name), null);
+  $format-name: if($format-name, format($format-name), '');
 
   $path: _font-url($path, $format);
   $suffix: $suffix or '';
@@ -106,9 +203,15 @@ $_font-format-options: (
 // -------------
 /// Build a `src` list
 /// for one `@font-face` declaration block.
+///
 /// @access private
+/// @group font-helpers
+///
 /// @param {map} $data -
 ///   Normalized map of format/url pairs to import.
+/// @return {list} -
+///   Compiled list of `url() format()` pairs,
+///   ready to apply in the `src` property.
 @function _font-src-list(
   $data
 ) {
@@ -136,11 +239,16 @@ $_font-format-options: (
 
 // Font Get Variants
 // -----------------
-/// Find all the variant key/data pairs,
-/// and return a filtered map including only font-variants.
+/// Extract all the variant key/data pairs,
+/// and return a filtered font-map including only font-variants.
+///
 /// @access private
+/// @group font-helpers
+///
 /// @param {map} $font -
-///   A map of data for one font
+///   A map of all the data for a single font.
+/// @return {map} -
+///   Only the variants provided in the given font-map.
 @function _font-get-variants(
   $font
 ) {
@@ -164,8 +272,11 @@ $_font-format-options: (
 
 // Parse Variant Name
 // ------------------
-/// Parse a list of font variants into a map of styles and weights.
+/// Parse a list of font variants into a map of `style` and `weight` settings.
+///
 /// @access private
+/// @group font-helpers
+///
 /// @param {List} $variant -
 ///   A list of font variants, such as `('bold', 'italic')`.
 /// @return {$map} -
@@ -192,6 +303,30 @@ $_font-format-options: (
 
 // Normalize Variant Data
 // ----------------------
+/// Convert variant values into a consistent format -
+/// to allow shorthand APIs,
+/// while providing consistent data formats to the internal functions.
+/// Strings are converted to maps,
+/// and format-paths are interpolated
+/// to create a self-contained map of variant data.
+///
+/// @access private
+/// @group font-helpers
+///
+/// @param {string | map} $data -
+///   A string path for interpolation,
+///   or a map of explicit format/path pairs for one font-variant.
+/// @param {list} $formats [()] -
+///   A list of formats to interpolate with generic paths,
+///   to create format/path values.
+///   If a path is provided without formats,
+///   we'll return `format-error` -
+///   allowing the function-call origin to provide
+///   a more detailed error message.
+/// @return {map} -
+///   A map of formats and urls for the given font-variant,
+///   merging interpolated and explicit format/paths
+///   into a single map.
 @function _normalize-variant-data(
   $data,
   $formats: ()
@@ -199,7 +334,7 @@ $_font-format-options: (
   @if (type-of($data) == 'string') {
     $data: (
       'path': $data
-    )
+    );
   }
 
   // Interpolate implicit paths
@@ -237,23 +372,46 @@ $_font-format-options: (
 
 // Import Font-Face [mixin]
 // ------------------------
-/// A wrapper utility for the CSS `@font-face` block.
+/// Compile provided font-variant data into a
+/// CSS `@font-face` import.
+///
 /// @access private
+/// @group font-helpers
+///
 /// @param {string} $name -
 ///   The font name.
 /// @param {string | list} $variant -
-///   The font-style and font-weight properties.
+///   The font-style and font-weight properties,
+///   e.g. `bold` or `('bold', 'italic')`.
 /// @param {string | map} $data -
-///   Path to the font files (leaving off the file format indicator),
+///   Path to the font files (leaving off the file-format extension),
 ///   or map of format/path pairs.
-/// @param {list} $formats [null] -
+/// @param {list} $formats [()] -
 ///   Optional list of font formats (e.g. 'ttf', 'otf', 'woff') to import,
 ///   in the order given.
 ///   If formats are not explicitly given here,
 ///   we fallback to formats in a data-map.
-/// @param {string} $svgid [null] -
-///   Optional SVG ID suffix.
-///   If none is given, font `$name` will be used as fallback.
+/// @output `@font-face` CSS-block for importing a given font variant.
+/// @throws When a generic variant-path is provided
+///   without formats for interpolation.
+///
+/// @example scss - string `$data`
+///   @include _import-font-face(
+///     $name: 'Franklin Gothic',
+///     $variant: ('bold' 'italic'),
+///     $data: 'path/to/franklin-bolditalic-font',
+///     $formats: ('woff2' 'woff')
+///   );
+/// @example scss - map `$data`
+///   @include _import-font-face(
+///     $name: 'Franklin Gothic',
+///     $variant: 'normal',
+///     $data: (
+///       'local': 'Franklin Gothic' ('franklin-gothic'),
+///       'woff2': 'path/to/franklin-bolditalic-font.woff2',
+///       'ttf': 'path/to/franklin-bolditalic-font.ttf',
+///     )
+///   );
 @mixin _import-font-face(
   $name,
   $variant,

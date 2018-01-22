@@ -2,17 +2,32 @@ theme: 'herman'
 dest: docs/
 src: sass/
 
-display:
-  access:
-    - public
-
 groups:
-  a11y: Accessibility
-  config: Webfont Configuration
-  fonts: Accessing Webfonts
-  pseudo: Pseudo Elements
+  Public API:
+    config: Webfont Configuration
+    fonts: Using Webfonts
+    a11y: Accessibility
+    pseudo: Pseudo Elements
+  Internal Logic:
+    font-helpers: Webfont Helpers
 
 herman:
+  extraDocs:
+    - name: Changelog
+      path: CHANGELOG.md
+    - name: Contributing
+      path: CONTRIBUTING.md
+  extraLinks:
+    - name: Herman Style Guides
+      url: http://oddbird.net/herman/
+    - name: Accoutrement Init
+      url: http://oddbird.net/accoutrement-init/
+    - name: Accoutrement Color
+      url: http://oddbird.net/accoutrement-color/
+    - name: Accoutrement Scale
+      url: http://oddbird.net/accoutrement-scale/
+    - name: Accoutrement Layout
+      url: http://oddbird.net/accoutrement-layout/
   sass:
     includepaths: ['sass']
     includes: ['type']
