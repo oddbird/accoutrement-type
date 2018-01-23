@@ -42,7 +42,7 @@
       <div class="project-title">
         <a href="index.html" rel="home" class="project-name">Accoutrement Type</a>
         
-          <span class="project-version">3.2.0-beta.1</span>
+          <span class="project-version">3.2.0-beta.2</span>
         
       </div>
     </header>
@@ -189,20 +189,67 @@
           
   <div class="text-block">
     <h1 id="changelog">Changelog</h1>
+<h2 id="3-2-0-unreleased">3.2.0 - UNRELEASED</h2>
+<p><em>Compared against 3.1.0 - for incremental changes, see the beta<span class="widont">&nbsp;</span>changelogs…</em></p>
+<ul>
+<li>BREAKING: Change <code>$font-path</code> default to <code>''</code> (empty string)
+so that no path is prepended to fonts without explicit<span class="widont">&nbsp;</span>settings.</li>
+<li>BREAKING: Remove <code>$font-formats</code> global,
+in favor of <code>formats</code> key inside font-maps.
+<ul>
+<li><code>font-face()</code> mixin no longer has <code>$formats</code> parameter.</li>
+<li><code>import-webfonts()</code> mixin no longer has <code>$formats</code> parameter.</li>
+</ul>
+</li>
+<li>BUGFIX: <code>font-family</code> function/mixin return proper font-name
+when given an alias<span class="widont">&nbsp;</span>keys.</li>
+<li>NEW: Allow sub-maps for each font variant (in addition to strings),
+optionally containing any or all of the following keys:
+<ul>
+<li><code>path</code>: generic path to font-files for the given variant,
+the same as providing a string instead of a<span class="widont">&nbsp;</span>map.</li>
+<li><code>svgid</code> {string}: the proper fragment ID for svg fonts, as<span class="widont">&nbsp;</span>needed.</li>
+<li><code>local</code> {list}: list of font-names to include as <code>local()</code> src
+for the given<span class="widont">&nbsp;</span>variant.</li>
+<li><code>&lt;format&gt;</code> {string}: optionally provide different paths per font-format,
+Base64 font data, or additional formats for<span class="widont">&nbsp;</span>importing.</li>
+</ul>
+</li>
+<li>NEW: Allow either string or number values
+for font-weights (e.g. <code>200</code> or <code>'200'</code> ).</li>
+</ul>
+<h2 id="3-2-0-beta-2-01-23-18">3.2.0-beta.2 - 01/23/18</h2>
+<ul>
+<li>BREAKING: Move <code>svgid</code> and <code>local</code> into font-variant sub-maps,
+since the required names are<span class="widont">&nbsp;</span>variant-specific.</li>
+<li>BREAKING: Remove <code>$font-formats</code> global,
+in favor of <code>formats</code> key inside font-maps.
+<ul>
+<li><code>font-face()</code> mixin no longer has <code>$formats</code> parameter.</li>
+<li><code>import-webfonts()</code> mixin no longer has <code>$formats</code> parameter.</li>
+</ul>
+</li>
+<li>BREAKING: Change <code>$font-path</code> default to <code>''</code> (empty string)
+so that no path is prepended to fonts without explicit<span class="widont">&nbsp;</span>settings.</li>
+<li>BUGFIX: <code>font-family</code> function/mixin return proper font-name
+when given alias<span class="widont">&nbsp;</span>keys.</li>
+<li>INTERNAL: Re-structure internal logic to normalize font maps,
+and handle additional font<span class="widont">&nbsp;</span>options.</li>
+</ul>
 <h2 id="3-2-0-beta-1-11-20-17">3.2.0-beta.1 - 11/20/17</h2>
 <ul>
 <li>NEW: Add <code>svgid</code> (string) option to font maps,
-for defining an id suffix in <code>svg</code> font urls</li>
+for defining an id suffix in <code>svg</code> font urls.</li>
 <li>NEW: Add <code>local</code> (list) option to font maps,
 and allow <code>'local'</code> font-format value,
 to output any number of given <code>local(&quot;font-name&quot;)</code> src values.
 If the local key is undefined, we fall back to the font<span class="widont">&nbsp;</span>name.</li>
 <li>NEW: Allow either string or number values
-for font-weights (e.g. <code>200</code> or <code>'200'</code> )</li>
+for font-weights (e.g. <code>200</code> or <code>'200'</code> ).</li>
 <li>NEW: Allow font-variants to define a sub-map
-of format/path pairs rather, than a single relative path -
+of format/path pairs rather than a single relative path -
 especially useful for defining data-uri embedded<span class="widont">&nbsp;</span>fonts.</li>
-<li>NEW: Format data-uri <code>src</code> values correctly</li>
+<li>NEW: Format data-uri <code>src</code> values correctly.</li>
 </ul>
 <h2 id="3-1-0-09-28-17">3.1.0 - 09/28/17</h2>
 <ul>

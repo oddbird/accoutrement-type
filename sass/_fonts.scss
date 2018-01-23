@@ -8,9 +8,10 @@
 /// which simply prepends the global `$font-path` when appropriate.
 ///
 /// @group fonts
+///
 /// @param {string} $path -
 ///   A path relative to the fonts directory.
-/// @return {String} -
+/// @return {string} -
 ///   The full path to a font file, in CSS `url('my/path')` format.
 ///
 /// @example scss
@@ -18,8 +19,7 @@
 ///   $src: font-url('sans/my-sans-font.woff2');
 ///   /* #{$src} */
 @function font-url(
-  $path,
-  $font-path: $font-path
+  $path
 ) {
   @if not str-index($path, 'data:') {
     $path: $font-path + $path;

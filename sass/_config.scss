@@ -89,7 +89,7 @@ $font-path: '' !default;
 ///
 ///   - For more control over individual variants and formats,
 ///     we also accept a map value.
-///     See the `<key>.<variant>.<??>` properties below…
+///     See the `<key>.<variant>.<format>` property below…
 /// @prop {list} <key>.<variant>.path -
 ///   An optional string defining the font-path
 ///   to interpolate for each given `formats`.
