@@ -9,7 +9,7 @@
   
   <title>Changelog | Accoutrement Type Documentation</title>
 
-  <link href="assets/img/favicon.ico" rel="shortcut icon">
+  <link href="assets/img/favicon.png" rel="shortcut icon">
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600|Source+Sans+Pro:400,400i,700,700i" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/webpack/app_styles.min.css" />
@@ -201,6 +201,8 @@ in favor of <code>formats</code> key inside font-maps.
 <li><code>import-webfonts()</code> mixin no longer has <code>$formats</code> parameter.</li>
 </ul>
 </li>
+<li>BREAKING/NEW: We now sort font-face src into the proper order for importing,
+based on the <a href="https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/">FontSpring<span class="widont">&nbsp;</span>syntax</a>.</li>
 <li>BUGFIX: <code>font-family</code> function/mixin return proper font-name
 when given an alias<span class="widont">&nbsp;</span>keys.</li>
 <li>NEW: Allow sub-maps for each font variant (in addition to strings),

@@ -2,6 +2,8 @@ theme: 'herman'
 dest: docs/
 src: sass/
 
+shortcutIcon: ./favicon.png
+
 groups:
   Public API:
     config: Webfont Configuration

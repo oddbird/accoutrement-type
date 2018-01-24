@@ -40,17 +40,18 @@ $_font-weight-options: (
 // -------------------
 /// A constant map of valid font formats,
 /// with their file extension and full `format()` name.
+/// The order given here will also be used in defining font-face src order.
 /// @access private
 /// @group font-helpers
 $_font-format-options: (
+  'eot': 'embedded-opentype',
   'local': null,
+  'woff2': 'woff2',
+  'woff': 'woff',
   'ttf': 'truetype',
   'otf': 'opentype',
-  'woff': 'woff',
-  'woff2': 'woff2',
   'svg': 'svg',
   'svgz': 'svg',
-  'eot': 'embedded-opentype',
 );
 
 
@@ -93,6 +94,9 @@ $_font-format-options: (
 /// This is similar to the `_font-get()` function,
 /// but returns only the name of the font.
 ///
+/// @since 3.2.0 -
+///   Added to provide correct name for aliased fonts.
+///
 /// @access private
 /// @group font-helpers
 ///
@@ -125,6 +129,9 @@ $_font-format-options: (
 /// leaving that to the public [`font-url()`][font-url] function.
 ///
 /// [font-url]: fonts.html#function--font-url
+///
+/// @since 3.2.0 -
+///   No longer accepts the `$formats` parameter.
 ///
 /// @access private
 /// @group font-helpers
@@ -163,6 +170,11 @@ $_font-format-options: (
     $suffix: if(str-index($svgid, '#'), $svgid, '#' + $svgid);
   }
 
+  // add iefix when needed
+  @if str-index($format, 'eot') and (not str-index($path, '?')) {
+    $suffix: '?';
+  }
+
   // compile and return
   @return $path + $ext + $suffix;
 }
@@ -172,6 +184,8 @@ $_font-format-options: (
 // --------
 /// Get the font `src` value for a given font path and format,
 /// including both `url()` and `format()`.
+/// This also sorts formats,
+/// organizing them into the proper output order for browser-compatability.
 ///
 /// @access private
 /// @group font-helpers
@@ -187,15 +201,13 @@ $_font-format-options: (
 ///   CSS-ready `url() format()` combination for font-face `src` output.
 @function _font-src(
   $path,
-  $format,
-  $suffix: null
+  $format
 ) {
   $format-name: map-get($_font-format-options, $format);
   $format-name: if($format-name, format($format-name), '');
 
   $path: _font-url($path, $format);
-  $suffix: $suffix or '';
-  @return font-url($path + $suffix) $format-name;
+  @return font-url($path) $format-name;
 }
 
 
@@ -217,21 +229,27 @@ $_font-format-options: (
 ) {
   $src: ();
 
-  @each $format, $url in $data {
-    $item: ();
+  // Use best-practice format order
+  @each $format in map-keys($_font-format-options) {
+    $url: map-get($data, $format);
 
-    @if ($format == 'local') {
-      @each $name in $url {
-        $li: local($name);
+    @if $url {
+      $item: ();
+
+      @if ($format == 'local') {
+        @each $name in $url {
+          $li: local($name);
+          $item: append($item, $li, 'comma');
+        }
+      } @else {
+        $li: _font-src($url, $format);
         $item: append($item, $li, 'comma');
       }
-    } @else {
-      $li: _font-src($url, $format);
-      $item: append($item, $li, 'comma');
-    }
 
-    $src: join($src, $item, 'comma');
+      $src: join($src, $item, 'comma');
+    }
   }
+
 
   @return $src;
 }
@@ -331,6 +349,7 @@ $_font-format-options: (
   $data,
   $formats: ()
 ) {
+
   @if (type-of($data) == 'string') {
     $data: (
       'path': $data
@@ -363,8 +382,7 @@ $_font-format-options: (
     }
   }
 
-  // Merge twice to get proper order and overrides…
-  $implicit: map-merge($explicit, $implicit);
+  // Merge and return…
   @return map-merge($implicit, $explicit);
 }
 
@@ -430,12 +448,6 @@ $_font-format-options: (
     font-family: quote($name);
     font-style: unquote(map-get($variant, 'style'));
     font-weight: unquote(map-get($variant, 'weight'));
-
-    $eot: map-get($data, 'eot');
-    @if $eot {
-      // IE9 compat mode (eot)
-      src: _font-src($eot, 'eot', '?#iefix');
-    }
 
     // IE6-IE8 (eot) - with '?#iefix'
     // Modern Browsers (woff, woff2)

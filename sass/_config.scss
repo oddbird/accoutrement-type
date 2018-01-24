@@ -71,7 +71,6 @@ $font-path: '' !default;
 ///   (e.g. `'woff2' 'eot'`)
 ///   to use when interpolating font-file paths
 ///   for font-face imported fonts.
-///   Formats will be imported in the order given.
 /// @prop {string | map} <key>.<variant> -
 ///   When describing locally-hosted or data-embedded fonts,
 ///   provide a key for each font-variant to import.
@@ -102,7 +101,6 @@ $font-path: '' !default;
 /// @prop {list} <key>.<variant>.<format> -
 ///   Optionally provide individual font-path overrides,
 ///   or base64 data-URIs for specific formats.
-///   Formats will be imported in the order defined.
 /// @example scss - Defining a font for import
 ///   $fonts: (
 ///     'sans': (

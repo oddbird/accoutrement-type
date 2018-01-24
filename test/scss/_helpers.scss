@@ -105,15 +105,15 @@
 @include describe('Font Src [function]') {
   @include it('Builds a src-list item based on path interpolation') {
     @include assert-equal(
-      _font-src('myfont', 'eot', '?#iefix'),
-      font-url('myfont.eot?#iefix') format('embedded-opentype')
+      _font-src('myfont', 'eot'),
+      font-url('myfont.eot?') format('embedded-opentype')
     );
   }
 
   @include it('Builds a src-list item based on explicit path') {
     @include assert-equal(
-      _font-src('myfont.eot', 'eot', '?#iefix'),
-      font-url('myfont.eot?#iefix') format('embedded-opentype')
+      _font-src('myfont.eot?', 'eot'),
+      font-url('myfont.eot?') format('embedded-opentype')
     );
   }
 
@@ -138,11 +138,11 @@
     );
 
     $src: (
+      url('../fonts/sourcesanspro-bold-webfont.eot?') format('embedded-opentype'),
       local('source-sans-pro-bold'),
       local('Source Sans Pro bold'),
       url('../fonts/sourcesanspro-bold-webfont.woff2') format('woff2'),
       url('data:application/x-font-woff;charset=utf-8;base64...') format('woff'),
-      url('../fonts/sourcesanspro-bold-webfont.eot') format('embedded-opentype'),
     );
 
     @include assert-equal(
@@ -280,20 +280,12 @@
 
     $expect: (
       'local': 'hello',
+      'woff': 'my/path.woff',
       'ttf': 'my/ttf/path.ttf',
       'svg': 'svg/path/to.svg#newID',
-      'woff': 'my/path.woff',
     );
 
     @include assert-equal($test, $expect);
-
-    @for $i from 1 through length($expect) {
-      @include assert-equal(
-        nth(map-keys($test), $i),
-        nth(map-keys($expect), $i),
-        'Maps should have the same key order'
-      );
-    }
   }
 
   @include it('Leaves local list as-is') {
@@ -422,8 +414,10 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype");
-          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.eot") format("embedded-opentype");
+          src: (
+            url("../fonts/path/to/myFont.eot?") format("embedded-opentype"),
+            url("../fonts/path/to/myFont.woff") format("woff")
+          );
         }
       }
     }

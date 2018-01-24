@@ -7,6 +7,9 @@
 /// This is a wrapper for the CSS `url()` function,
 /// which simply prepends the global `$font-path` when appropriate.
 ///
+/// @since 3.2.0 -
+///   Supports Base64 data URI's, without prepending font-path.
+///
 /// @group fonts
 ///
 /// @param {string} $path -
@@ -33,6 +36,9 @@
 // ----------------------
 /// Access a font-family from your `$fonts` map,
 /// with name and font-stack.
+///
+/// @since 3.2.0 -
+///   Provides the correct name for fonts when an alias is given.
 ///
 /// @group fonts
 ///

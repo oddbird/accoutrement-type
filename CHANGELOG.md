@@ -12,6 +12,8 @@ Changelog
   in favor of `formats` key inside font-maps.
   - `font-face()` mixin no longer has `$formats` parameter.
   - `import-webfonts()` mixin no longer has `$formats` parameter.
+- BREAKING/NEW: We now sort font-face src into the proper order for importing,
+  based on the [FontSpring syntax][fs].
 - BUGFIX: `font-family` function/mixin return proper font-name
   when given an alias keys.
 - NEW: Allow sub-maps for each font variant (in addition to strings),
@@ -25,6 +27,8 @@ Changelog
     Base64 font data, or additional formats for importing.
 - NEW: Allow either string or number values
   for font-weights (e.g. `200` or `'200'` ).
+
+[fs]: https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/
 
 
 3.2.0-beta.2 - 01/23/18

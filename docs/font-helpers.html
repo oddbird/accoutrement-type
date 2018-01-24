@@ -9,7 +9,7 @@
   
   <title>Webfont Helpers | Accoutrement Type Documentation</title>
 
-  <link href="assets/img/favicon.ico" rel="shortcut icon">
+  <link href="assets/img/favicon.png" rel="shortcut icon">
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600|Source+Sans+Pro:400,400i,700,700i" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/webpack/app_styles.min.css" />
@@ -686,14 +686,14 @@
       
       
       <pre class="hljs-pre"><code class="lang-scss">$_font-format-options: (
+  &#39;eot&#39;: &#39;embedded-opentype&#39;,
   &#39;local&#39;: null,
+  &#39;woff2&#39;: &#39;woff2&#39;,
+  &#39;woff&#39;: &#39;woff&#39;,
   &#39;ttf&#39;: &#39;truetype&#39;,
   &#39;otf&#39;: &#39;opentype&#39;,
-  &#39;woff&#39;: &#39;woff&#39;,
-  &#39;woff2&#39;: &#39;woff2&#39;,
   &#39;svg&#39;: &#39;svg&#39;,
   &#39;svgz&#39;: &#39;svg&#39;,
-  &#39;eot&#39;: &#39;embedded-opentype&#39;,
 );</code></pre>
     </div>
   
@@ -707,7 +707,8 @@
   
     <div class="text-block">
       <p>A constant map of valid font formats,
-with their file extension and full <code>format()</code> name.</p>
+with their file extension and full <code>format()</code> name.
+The order given here will also be used in defining font-face src<span class="widont">&nbsp;</span>order.</p>
 
       
   
@@ -777,6 +778,37 @@ with their file extension and full <code>format()</code> name.</p>
       
         <a href="
   font-helpers.html#function--_font-src" class="item-name">_font-src()</a>
+      
+      
+      
+      <span class="item-note">[private]</span>
+    </h4>
+
+    
+  </div>
+
+
+        
+      
+        
+
+        
+          
+          
+  
+  
+  
+  
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      <span class="item-type">@function</span>
+      
+        <a href="
+  font-helpers.html#function--_font-src-list" class="item-name">_font-src-list()</a>
       
       
       
@@ -1937,7 +1969,9 @@ and will be added when<span class="widont">&nbsp;</span>missing.</p>
   
     <div class="text-block">
       <p>Get the font <code>src</code> value for a given font path and format,
-including both <code>url()</code> and <code>format()</code>.</p>
+including both <code>url()</code> and <code>format()</code>.
+This also sorts formats,
+organizing them into the proper output order for<span class="widont">&nbsp;</span>browser-compatability.</p>
 
       
   
@@ -2244,37 +2278,6 @@ or data-uri for<span class="widont">&nbsp;</span>font-src.</p>
 
         
       
-        
-
-        
-          
-          
-  
-  
-  
-  
-  
-  
-
-  
-  <div class="param-list">
-    <h4 class="param-title">
-      <span class="item-type">@mixin</span>
-      
-        <a href="
-  font-helpers.html#mixin--_import-font-face" class="item-name">_import-font-face()</a>
-      
-      
-      
-      <span class="item-note">[private]</span>
-    </h4>
-
-    
-  </div>
-
-
-        
-      
     
   </div>
 
@@ -2501,6 +2504,41 @@ ready to apply in the <code>src</code> property.</p>
       
         <a href="
   font-helpers.html#function--_font-src" class="item-name">_font-src()</a>
+      
+      
+      
+      <span class="item-note">[private]</span>
+    </h4>
+
+    
+  </div>
+
+
+        
+      
+        
+        
+        
+
+        
+          
+          
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      
+      
+        <a href="
+  font-helpers.html#variable--_font-format-options" class="item-name">$_font-format-options</a>
       
       
       
@@ -4118,41 +4156,6 @@ we fallback to formats in a<span class="widont">&nbsp;</span>data-map.</p>
       
         <a href="
   font-helpers.html#function--_normalize-variant-data" class="item-name">_normalize-variant-data()</a>
-      
-      
-      
-      <span class="item-note">[private]</span>
-    </h4>
-
-    
-  </div>
-
-
-        
-      
-        
-        
-        
-
-        
-          
-          
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  <div class="param-list">
-    <h4 class="param-title">
-      <span class="item-type">@function</span>
-      
-        <a href="
-  font-helpers.html#function--_font-src" class="item-name">_font-src()</a>
       
       
       
