@@ -2,6 +2,28 @@
 // ==================
 
 
+/// # Configuring WebFonts
+///
+/// Webfont configuration is most useful
+/// for handling any font that requires `@font-face` importing --
+/// locally-hosted files, base64 data, etc.
+/// But collecting all your font data in a single location
+/// allows us to automate various actions:
+/// `@font-face` imports,
+/// `font-family` fallback stacks,
+/// font aliases (for semantic access),
+/// or even documentation and font-specimens
+/// with a tool like [Herman].
+///
+/// We provide options for maintianing various font-types,
+/// from locally-hosted, to base64 embedded,
+/// and even CDN imports from sites like typekit and google fonts.
+///
+/// [Herman]: http://oddbird.net/herman/
+///
+/// @group config
+
+
 // Font Path
 // ---------
 /// The path to your fonts directory,

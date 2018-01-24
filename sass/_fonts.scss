@@ -2,6 +2,16 @@
 // =========
 
 
+/// # Using WebFonts
+///
+/// Once you've configured your webfont data into a map,
+/// these tools will help you access the data in various ways:
+/// from creating `@font-face` imports,
+/// to calling font-families by any given alias.
+///
+/// @group fonts
+
+
 // Font-URL [function]
 // -------------------
 /// This is a wrapper for the CSS `url()` function,
