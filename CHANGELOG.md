@@ -17,7 +17,7 @@ see the 3.2 beta changelogs…*
 - BREAKING: We no longer accept `regular` as a font-variant.
   Use the CSS-friendly `normal` instead.
 - BREAKING/NEW: We now sort font-face src into the proper order for importing,
-  based on the [Fontspring syntax][fs].
+  based on the [fontsquirrel generated syntax][fs].
 - BUGFIX: `font-family` function/mixin return proper font-name
   when given an alias keys.
 - NEW: Allow sub-maps for each font variant (in addition to strings),
@@ -32,7 +32,7 @@ see the 3.2 beta changelogs…*
 - NEW: Allow either string or number values
   for font-weights (e.g. `200` or `'200'` ).
 
-[fs]: https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/
+[fs]: https://www.fontsquirrel.com/tools/webfont-generator
 
 
 3.2.0-beta.2 - 01/23/18

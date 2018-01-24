@@ -7,7 +7,7 @@
 /// This is a wrapper for the CSS `url()` function,
 /// which simply prepends the global `$font-path` when appropriate.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Supports Base64 data URI's, without prepending font-path.
 ///
 /// @group fonts
@@ -37,7 +37,7 @@
 /// Access a font-family from your `$fonts` map,
 /// with name and font-stack.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Provides the correct name for fonts when an alias is given.
 ///
 /// @group fonts
@@ -98,7 +98,7 @@
 /// Import any local webfont defined in your `$fonts` configuration
 /// (variants without a path will not be imported).
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   No longer accepts the `$formats` parameter.
 ///
 /// @group fonts
@@ -138,7 +138,7 @@
 /// Find all the fonts that include data for imports,
 /// and generate `@font-face` blocks for each individual font and variant.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   No longer accepts the `$formats` parameter.
 ///
 /// @group fonts

@@ -1292,7 +1292,7 @@ but returns only the name of the<span class="widont">&nbsp;</span>font.</p>
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Added to provide correct name for aliased<span class="widont">&nbsp;</span>fonts.</p>
 </div>
       </section>
@@ -1656,7 +1656,7 @@ leaving that to the public <a href="fonts.html#function--font-url"><code>font-ur
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Added to format font-paths correctly, with file extension and<span class="widont">&nbsp;</span>suffix.</p>
 </div>
       </section>
@@ -1774,6 +1774,33 @@ Local and base64 font names &amp; URI’s are returned without any<span class="w
         <p>SVG fragment-identifier to append on svg fonts.
 The initial <code>#</code> character is optional,
 and will be added when<span class="widont">&nbsp;</span>missing.</p>
+
+      </div>
+    
+  </div>
+
+
+      
+        
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      
+      
+        <span class="item-name">$iefix:</span>
+      
+      
+      <span class="value-type">(boolean)</span>
+      
+    </h4>
+
+    
+      
+      <div class="param-details text-block">
+        <p>Optionally append an <code>?#iefix</code> suffix to <code>eot</code> fonts.</p>
 
       </div>
     
@@ -1911,6 +1938,37 @@ and will be added when<span class="widont">&nbsp;</span>missing.</p>
 
         
       
+        
+
+        
+          
+          
+  
+  
+  
+  
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      <span class="item-type">@mixin</span>
+      
+        <a href="
+  font-helpers.html#mixin--_import-font-face" class="item-name">_import-font-face()</a>
+      
+      
+      
+      <span class="item-note">[private]</span>
+    </h4>
+
+    
+  </div>
+
+
+        
+      
     
   </div>
 
@@ -1993,7 +2051,7 @@ organizing them into the proper output order for<span class="widont">&nbsp;</spa
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>No longer accepts the <code>$format</code> parameter.</p>
 </div>
       </section>
@@ -2383,7 +2441,7 @@ for one <code>@font-face</code> declaration block.</p>
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Added to sort and compile src lists,
 with local() options and proper format<span class="widont">&nbsp;</span>order.</p>
 </div>
@@ -2633,6 +2691,10 @@ ready to apply in the <code>src</code> property.</p>
 
         
       
+        
+
+        
+      
     
   </div>
 
@@ -2714,7 +2776,7 @@ and return a filtered font-map including only<span class="widont">&nbsp;</span>f
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Added to extract variant-data from a<span class="widont">&nbsp;</span>font-map.</p>
 </div>
       </section>
@@ -3042,7 +3104,7 @@ and return a filtered font-map including only<span class="widont">&nbsp;</span>f
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><ul>
 <li>Name changed from <code>_parse-font-variant</code> for clarity.
 <ul>
@@ -3381,7 +3443,7 @@ to create a self-contained map of variant<span class="widont">&nbsp;</span>data.
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Added to normalize string and map variant syntaxes
 into a single (map) format for internal<span class="widont">&nbsp;</span>use.</p>
 </div>
@@ -3752,13 +3814,13 @@ CSS <code>@font-face</code> import.</p>
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><ul>
 <li>Changed parameters to handle new syntax
 for variant-data and font-formats.
 <ul>
 <li>Errors when <code>path</code> is provided without <code>formats</code>.</li>
-<li>Outputs updated font-face syntax, based on <a href="https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/">Fontspring</a><span class="widont">&nbsp;</span>approach.</li>
+<li>Outputs updated font-face syntax, based on <a href="https://www.fontsquirrel.com/tools/webfont-generator">fontsquirrel</a><span class="widont">&nbsp;</span>approach.</li>
 </ul>
 </li>
 </ul>
@@ -4270,6 +4332,47 @@ we fallback to formats in a<span class="widont">&nbsp;</span>data-map.</p>
       <span class="item-type">@function</span>
       
         <a href="
+  font-helpers.html#function--_font-url" class="item-name">_font-url()</a>
+      
+      
+      
+      <span class="item-note">[private]</span>
+    </h4>
+
+    
+  </div>
+
+
+        
+      
+        
+        
+        
+
+        
+      
+        
+        
+        
+
+        
+          
+          
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      <span class="item-type">@function</span>
+      
+        <a href="
   font-helpers.html#function--_font-src-list" class="item-name">_font-src-list()</a>
       
       
@@ -4280,6 +4383,12 @@ we fallback to formats in a<span class="widont">&nbsp;</span>data-map.</p>
     
   </div>
 
+
+        
+      
+        
+        
+        
 
         
       

@@ -12,7 +12,7 @@
 /// an optional shortcut to keep from writing
 /// long and repetative paths for every font.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   The default changed from `'../fonts/'` to `''` --
 ///   so that no path is added unless explicity requested.
 ///
@@ -43,7 +43,7 @@ $font-path: '' !default;
 /// If you are using [Herman] to font previews,
 /// it will include `source` links in the output.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   - Remove the `$font-formats` variable,
 ///     and replaced it with a `formats` property
 ///     in each individual font map.

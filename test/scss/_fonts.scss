@@ -71,8 +71,9 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-regular-webfont.eot");
           src: (
-            url("../fonts/sans/sourcesanspro-regular-webfont.eot?") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.eot?#iefix") format("embedded-opentype"),
             url("../fonts/sans/sourcesanspro-regular-webfont.woff") format("woff"),
             url("../fonts/sans/sourcesanspro-regular-webfont.svg") format("svg"),
           );
@@ -82,8 +83,9 @@
           font-family: "Source Sans Pro";
           font-style: italic;
           font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-italic-webfont.eot");
           src: (
-            url("../fonts/sans/sourcesanspro-italic-webfont.eot?") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.eot?#iefix") format("embedded-opentype"),
             url("../fonts/sans/sourcesanspro-italic-webfont.woff") format("woff"),
             url("../fonts/sans/sourcesanspro-italic-webfont.svg") format("svg"),
           );
@@ -93,8 +95,14 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
+          src: url("../fonts/sans/sourcesanspro-bold-webfont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
           src: (
-            url("../fonts/sans/sourcesanspro-bold-webfont.eot?") format("embedded-opentype"),
             local('source-sans-pro-bold'),
             local('Source Sans Pro bold'),
             url("data:application/x-font-woff;charset=utf-8;base64...") format("woff"),
@@ -122,8 +130,9 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-regular-webfont.eot");
           src: (
-            url("../fonts/sans/sourcesanspro-regular-webfont.eot?") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.eot?#iefix") format("embedded-opentype"),
             url("../fonts/sans/sourcesanspro-regular-webfont.woff") format("woff"),
             url("../fonts/sans/sourcesanspro-regular-webfont.svg") format("svg"),
           );
@@ -133,8 +142,9 @@
           font-family: "Source Sans Pro";
           font-style: italic;
           font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-italic-webfont.eot");
           src: (
-            url("../fonts/sans/sourcesanspro-italic-webfont.eot?") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.eot?#iefix") format("embedded-opentype"),
             url("../fonts/sans/sourcesanspro-italic-webfont.woff") format("woff"),
             url("../fonts/sans/sourcesanspro-italic-webfont.svg") format("svg"),
           );
@@ -144,8 +154,14 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
+          src: url("../fonts/sans/sourcesanspro-bold-webfont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
           src: (
-            url("../fonts/sans/sourcesanspro-bold-webfont.eot?") format("embedded-opentype"),
             local('source-sans-pro-bold'),
             local('Source Sans Pro bold'),
             url("data:application/x-font-woff;charset=utf-8;base64...") format("woff"),

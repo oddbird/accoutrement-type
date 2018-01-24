@@ -246,7 +246,7 @@ which simply prepends the global <code>$font-path</code> when appropriate.</p>
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Supports Base64 data URI’s, without prepending<span class="widont">&nbsp;</span>font-path.</p>
 </div>
       </section>
@@ -540,6 +540,37 @@ $src: font-url(&#39;sans/my-sans-font.woff2&#39;);
 
         
       
+        
+
+        
+          
+          
+  
+  
+  
+  
+  
+  
+
+  
+  <div class="param-list">
+    <h4 class="param-title">
+      <span class="item-type">@mixin</span>
+      
+        <a href="
+  font-helpers.html#mixin--_import-font-face" class="item-name">_import-font-face()</a>
+      
+      
+      
+      <span class="item-note">[private]</span>
+    </h4>
+
+    
+  </div>
+
+
+        
+      
     
   </div>
 
@@ -619,7 +650,7 @@ with name and<span class="widont">&nbsp;</span>font-stack.</p>
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>Provides the correct name for fonts when an alias is<span class="widont">&nbsp;</span>given.</p>
 </div>
       </section>
@@ -1339,7 +1370,7 @@ html {
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>No longer accepts the <code>$formats</code> parameter.</p>
 </div>
       </section>
@@ -1527,21 +1558,24 @@ html {
   font-family: &quot;Source Sans Pro&quot;;
   font-style: normal;
   font-weight: normal;
-  src: url(&quot;sans/sourcesanspro-regular-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-regular-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-regular-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 
 @font-face {
   font-family: &quot;Source Sans Pro&quot;;
   font-style: italic;
   font-weight: normal;
-  src: url(&quot;sans/sourcesanspro-italic-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-italic-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-italic-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 
 @font-face {
   font-family: &quot;Source Sans Pro&quot;;
   font-style: normal;
   font-weight: bold;
-  src: url(&quot;sans/sourcesanspro-bold-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-bold-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-bold-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 </code></pre>
     </div>
@@ -1843,7 +1877,7 @@ and generate <code>@font-face</code> blocks for each individual font and<span cl
   
     
       <section class="summary-subsection">
-        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <h3 class="summary-subtitle">Since <code>4.0.0</code>:</h3>
         <div class="subsection-details"><p>No longer accepts the <code>$formats</code> parameter.</p>
 </div>
       </section>
@@ -2036,21 +2070,24 @@ and generate <code>@font-face</code> blocks for each individual font and<span cl
   font-family: &quot;Source Sans Pro&quot;;
   font-style: normal;
   font-weight: normal;
-  src: url(&quot;sans/sourcesanspro-regular-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-regular-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-regular-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-regular-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 
 @font-face {
   font-family: &quot;Source Sans Pro&quot;;
   font-style: italic;
   font-weight: normal;
-  src: url(&quot;sans/sourcesanspro-italic-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-italic-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-italic-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-italic-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 
 @font-face {
   font-family: &quot;Source Sans Pro&quot;;
   font-style: normal;
   font-weight: bold;
-  src: url(&quot;sans/sourcesanspro-bold-webfont.eot?&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff&quot;) format(&quot;woff&quot;);
+  src: url(&quot;sans/sourcesanspro-bold-webfont.eot&quot;);
+  src: url(&quot;sans/sourcesanspro-bold-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff2&quot;) format(&quot;woff2&quot;), url(&quot;sans/sourcesanspro-bold-webfont.woff&quot;) format(&quot;woff&quot;);
 }
 </code></pre>
     </div>

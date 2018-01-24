@@ -94,7 +94,7 @@ $_font-format-options: (
 /// This is similar to the `_font-get()` function,
 /// but returns only the name of the font.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Added to provide correct name for aliased fonts.
 ///
 /// @access private
@@ -130,7 +130,7 @@ $_font-format-options: (
 ///
 /// [font-url]: fonts.html#function--font-url
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Added to format font-paths correctly, with file extension and suffix.
 ///
 /// @access private
@@ -147,12 +147,15 @@ $_font-format-options: (
 ///   SVG fragment-identifier to append on svg fonts.
 ///   The initial `#` character is optional,
 ///   and will be added when missing.
+/// @param {boolean} $iefix -
+///   Optionally append an `?#iefix` suffix to `eot` fonts.
 /// @return {string} -
 ///   Font-format URL for importing.
 @function _font-url(
   $path,
   $format,
-  $svgid: null
+  $svgid: null,
+  $iefix: false
 ) {
   $suffix: '';
 
@@ -171,8 +174,8 @@ $_font-format-options: (
   }
 
   // add iefix when needed
-  @if str-index($format, 'eot') and (not str-index($path, '?')) {
-    $suffix: '?';
+  @if str-index($format, 'eot') and ($iefix) and  (not str-index($path, '?')) {
+    $suffix: '?#iefix';
   }
 
   // compile and return
@@ -187,7 +190,7 @@ $_font-format-options: (
 /// This also sorts formats,
 /// organizing them into the proper output order for browser-compatability.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   No longer accepts the `$format` parameter.
 ///
 /// @access private
@@ -209,7 +212,7 @@ $_font-format-options: (
   $format-name: map-get($_font-format-options, $format);
   $format-name: if($format-name, format($format-name), '');
 
-  $path: _font-url($path, $format);
+  $path: _font-url($path, $format, $iefix: true);
   @return font-url($path) $format-name;
 }
 
@@ -219,7 +222,7 @@ $_font-format-options: (
 /// Build a `src` list
 /// for one `@font-face` declaration block.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Added to sort and compile src lists,
 ///   with local() options and proper format order.
 ///
@@ -267,7 +270,7 @@ $_font-format-options: (
 /// Extract all the variant key/data pairs,
 /// and return a filtered font-map including only font-variants.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Added to extract variant-data from a font-map.
 ///
 /// @access private
@@ -302,7 +305,7 @@ $_font-format-options: (
 // ------------------
 /// Parse a list of font variants into a map of `style` and `weight` settings.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   - Name changed from `_parse-font-variant` for clarity.
 ///   - Supports both string and number values for font-weight.
 ///
@@ -342,7 +345,7 @@ $_font-format-options: (
 /// and format-paths are interpolated
 /// to create a self-contained map of variant data.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   Added to normalize string and map variant syntaxes
 ///   into a single (map) format for internal use.
 ///
@@ -411,13 +414,13 @@ $_font-format-options: (
 /// Compile provided font-variant data into a
 /// CSS `@font-face` import.
 ///
-/// @since 3.2.0 -
+/// @since 4.0.0 -
 ///   - Changed parameters to handle new syntax
 ///     for variant-data and font-formats.
 ///   - Errors when `path` is provided without `formats`.
-///   - Outputs updated font-face syntax, based on [Fontspring][fs] approach.
+///   - Outputs updated font-face syntax, based on [fontsquirrel][fs] approach.
 ///
-/// [fs]: https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/
+/// [fs]: https://www.fontsquirrel.com/tools/webfont-generator
 ///
 /// @access private
 /// @group font-helpers
@@ -464,21 +467,63 @@ $_font-format-options: (
 ) {
   $variant: _parse-variant-name($variant);
   $data: _normalize-variant-data($data, $formats);
+  $style: map-get($variant, 'style');
+  $weight: map-get($variant, 'weight');
 
   @if ($data == 'format-error') {
     @error '(#{$name}) Font-path interpolation ' +
     'requires a list of `formats` to import.';
   }
 
-  @font-face {
-    font-family: quote($name);
-    font-style: unquote(map-get($variant, 'style'));
-    font-weight: unquote(map-get($variant, 'weight'));
+  // Special handling of eot with local or data
+  $eot: map-get($data, 'eot');
+  $local: map-get($data, 'local');
+  $double: if($eot and $local, true, false);
 
-    // IE6-IE8 (eot) - with '?#iefix'
-    // Modern Browsers (woff, woff2)
-    // Safari, Android, iOS (ttf, otf)
-    // Legacy iOS (svg, svgz) - with '#svgName'
-    src: _font-src-list($data);
+  @if $eot {
+    $eot: _font-url($eot, 'eot');
+    $eot: font-url($eot);
+
+    @each $format, $url in $data {
+      @if ($format != 'local') and str-index($url, 'data:') {
+        $double: true;
+      }
+    }
+  }
+
+  // Format values for CSS
+  $name: quote($name);
+  $style: unquote($style);
+  $weight: unquote($weight);
+
+  // Output…
+  @if $double {
+    $data: map-remove($data, 'eot');
+
+    // ie-only
+    @font-face {
+      font-family: $name;
+      font-style: $style;
+      font-weight: $weight;
+      src: $eot;
+    }
+
+    // everything else
+    @font-face {
+      font-family: $name;
+      font-style: $style;
+      font-weight: $weight;
+      src: _font-src-list($data);
+    }
+  } @else {
+    // combined output
+    // sass-lint:disable no-duplicate-properties
+    @font-face {
+      font-family: $name;
+      font-style: $style;
+      font-weight: $weight;
+      src: $eot;
+      src: _font-src-list($data);
+    }
   }
 }

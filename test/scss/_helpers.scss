@@ -97,6 +97,26 @@
       'no change when hash exists'
     );
   }
+
+  @include it('Adds iefix when needed') {
+    @include assert-equal(
+      _font-url('this-file', 'eot', $iefix: true),
+      'this-file.eot?#iefix',
+      'adds hash if absent and requested'
+    );
+
+    @include assert-equal(
+      _font-url('this-file.eot?#iefix', 'eot', $iefix: true),
+      'this-file.eot?#iefix',
+      'hash remains when present and requested'
+    );
+
+    @include assert-equal(
+      _font-url('this-file', 'eot', $iefix: false),
+      'this-file.eot',
+      'no iefix by default'
+    );
+  }
 }
 
 
@@ -106,14 +126,14 @@
   @include it('Builds a src-list item based on path interpolation') {
     @include assert-equal(
       _font-src('myfont', 'eot'),
-      font-url('myfont.eot?') format('embedded-opentype')
+      font-url('myfont.eot?#iefix') format('embedded-opentype')
     );
   }
 
   @include it('Builds a src-list item based on explicit path') {
     @include assert-equal(
-      _font-src('myfont.eot?', 'eot'),
-      font-url('myfont.eot?') format('embedded-opentype')
+      _font-src('myfont.eot?#ie', 'eot'),
+      font-url('myfont.eot?#ie') format('embedded-opentype')
     );
   }
 
@@ -138,7 +158,7 @@
     );
 
     $src: (
-      url('../fonts/sourcesanspro-bold-webfont.eot?') format('embedded-opentype'),
+      url('../fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
       local('source-sans-pro-bold'),
       local('Source Sans Pro bold'),
       url('../fonts/sourcesanspro-bold-webfont.woff2') format('woff2'),
@@ -318,7 +338,10 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg") format("svg");
+          src: (
+            url("../fonts/path/to/myFont.woff") format("woff"),
+            url("../fonts/path/to/myFont.svg") format("svg")
+          );
         }
       }
     }
@@ -331,8 +354,8 @@
           $name: 'Source Sans Pro',
           $variant: 'bold',
           $data: (
-            'local': 'this' 'another one',
             'woff': 'path/to/myFont',
+            'local': 'this' 'another one',
           )
         );
       }
@@ -342,7 +365,11 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: local('this'), local('another one'), url("../fonts/path/to/myFont.woff") format("woff");
+          src: (
+            local('this'),
+            local('another one'),
+            url("../fonts/path/to/myFont.woff") format("woff")
+          );
         }
       }
     }
@@ -367,7 +394,10 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("../fonts/path/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg#myID") format("svg");
+          src: (
+            url("../fonts/path/to/myFont.woff") format("woff"),
+            url("../fonts/path/to/myFont.svg#myID") format("svg")
+          );
         }
       }
     }
@@ -383,7 +413,7 @@
             'path': 'path/to/myFont',
             'woff': 'different/to/myFont.woff',
           ),
-          $formats: 'woff' 'svg'
+          $formats: 'svg' 'woff'
         );
       }
 
@@ -392,7 +422,10 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
-          src: url("../fonts/different/to/myFont.woff") format("woff"), url("../fonts/path/to/myFont.svg") format("svg");
+          src: (
+            url("../fonts/different/to/myFont.woff") format("woff"),
+            url("../fonts/path/to/myFont.svg") format("svg")
+          );
         }
       }
     }
@@ -414,8 +447,80 @@
           font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: bold;
+          src: url("../fonts/path/to/myFont.eot");
           src: (
-            url("../fonts/path/to/myFont.eot?") format("embedded-opentype"),
+            url("../fonts/path/to/myFont.eot?#iefix") format("embedded-opentype"),
+            url("../fonts/path/to/myFont.woff") format("woff")
+          );
+        }
+      }
+    }
+  }
+
+  @include it('Special handling for eot files + data') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'path': 'path/to/myFont',
+            'woff2': 'data:application/font-woff2;charset=utf-8;base64,DATA_HERE',
+          ),
+          $formats: 'woff' 'eot'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/path/to/myFont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            url("data:application/font-woff2;charset=utf-8;base64,DATA_HERE") format("woff2"),
+            url("../fonts/path/to/myFont.woff") format("woff")
+          );
+        }
+      }
+    }
+  }
+
+  @include it('Special handling for eot files + local()') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'path': 'path/to/myFont',
+            'local': 'hello world' 'hello-world',
+          ),
+          $formats: 'woff' 'eot'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/path/to/myFont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            local('hello world'),
+            local('hello-world'),
             url("../fonts/path/to/myFont.woff") format("woff")
           );
         }
