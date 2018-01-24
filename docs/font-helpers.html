@@ -1290,6 +1290,14 @@ but returns only the name of the<span class="widont">&nbsp;</span>font.</p>
 
       
   
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>Added to provide correct name for aliased<span class="widont">&nbsp;</span>fonts.</p>
+</div>
+      </section>
+    
+  
 
       
   
@@ -1646,6 +1654,14 @@ leaving that to the public <a href="fonts.html#function--font-url"><code>font-ur
 
       
   
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>Added to format font-paths correctly, with file extension and<span class="widont">&nbsp;</span>suffix.</p>
+</div>
+      </section>
+    
+  
 
       
   
@@ -1974,6 +1990,14 @@ This also sorts formats,
 organizing them into the proper output order for<span class="widont">&nbsp;</span>browser-compatability.</p>
 
       
+  
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>No longer accepts the <code>$format</code> parameter.</p>
+</div>
+      </section>
+    
   
 
       
@@ -2357,6 +2381,15 @@ for one <code>@font-face</code> declaration block.</p>
 
       
   
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>Added to sort and compile src lists,
+with local() options and proper format<span class="widont">&nbsp;</span>order.</p>
+</div>
+      </section>
+    
+  
 
       
   
@@ -2679,6 +2712,14 @@ and return a filtered font-map including only<span class="widont">&nbsp;</span>f
 
       
   
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>Added to extract variant-data from a<span class="widont">&nbsp;</span>font-map.</p>
+</div>
+      </section>
+    
+  
 
       
   
@@ -2998,6 +3039,20 @@ and return a filtered font-map including only<span class="widont">&nbsp;</span>f
       <p>Parse a list of font variants into a map of <code>style</code> and <code>weight</code> settings.</p>
 
       
+  
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><ul>
+<li>Name changed from <code>_parse-font-variant</code> for clarity.
+<ul>
+<li>Supports both string and number values for<span class="widont">&nbsp;</span>font-weight.</li>
+</ul>
+</li>
+</ul>
+</div>
+      </section>
+    
   
 
       
@@ -3323,6 +3378,15 @@ and format-paths are interpolated
 to create a self-contained map of variant<span class="widont">&nbsp;</span>data.</p>
 
       
+  
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><p>Added to normalize string and map variant syntaxes
+into a single (map) format for internal<span class="widont">&nbsp;</span>use.</p>
+</div>
+      </section>
+    
   
 
       
@@ -3685,6 +3749,22 @@ into a single<span class="widont">&nbsp;</span>map.</p>
 CSS <code>@font-face</code> import.</p>
 
       
+  
+    
+      <section class="summary-subsection">
+        <h3 class="summary-subtitle">Since <code>3.2.0</code>:</h3>
+        <div class="subsection-details"><ul>
+<li>Changed parameters to handle new syntax
+for variant-data and font-formats.
+<ul>
+<li>Errors when <code>path</code> is provided without <code>formats</code>.</li>
+<li>Outputs updated font-face syntax, based on <a href="https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/">Fontspring</a><span class="widont">&nbsp;</span>approach.</li>
+</ul>
+</li>
+</ul>
+</div>
+      </section>
+    
   
 
       

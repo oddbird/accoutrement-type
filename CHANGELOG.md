@@ -12,8 +12,10 @@ Changelog
   in favor of `formats` key inside font-maps.
   - `font-face()` mixin no longer has `$formats` parameter.
   - `import-webfonts()` mixin no longer has `$formats` parameter.
+- BREAKING: We no longer accept `regular` as a font-variant.
+  Use the CSS-friendly `normal` instead.
 - BREAKING/NEW: We now sort font-face src into the proper order for importing,
-  based on the [FontSpring syntax][fs].
+  based on the [Fontspring syntax][fs].
 - BUGFIX: `font-family` function/mixin return proper font-name
   when given an alias keys.
 - NEW: Allow sub-maps for each font variant (in addition to strings),

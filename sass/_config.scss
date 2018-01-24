@@ -47,6 +47,8 @@ $font-path: '' !default;
 ///   - Remove the `$font-formats` variable,
 ///     and replaced it with a `formats` property
 ///     in each individual font map.
+///   - No longer accepts `regular` as a font-variant,
+///     use the CSS-friendly `normal` instead.
 ///   - Allow explicit configuration maps for each font variant,
 ///     to support variant-specific `local` and `svgid` options,
 ///     along with the ability to specificy
@@ -140,7 +142,7 @@ $font-path: '' !default;
 ///     'uri-font': (
 ///       'name': 'My Font',
 ///       'stack': ('Helvetica', 'Arial', 'sans-serif'),
-///       'regular': (
+///       'normal': (
 ///         'local': ('My Font', 'my-font-regular'),
 ///         'woff2': 'data:application/font-woff2;charset=utf-8;base64,…',
 ///       ),

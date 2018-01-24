@@ -131,7 +131,7 @@ $_font-format-options: (
 /// [font-url]: fonts.html#function--font-url
 ///
 /// @since 3.2.0 -
-///   No longer accepts the `$formats` parameter.
+///   Added to format font-paths correctly, with file extension and suffix.
 ///
 /// @access private
 /// @group font-helpers
@@ -187,6 +187,9 @@ $_font-format-options: (
 /// This also sorts formats,
 /// organizing them into the proper output order for browser-compatability.
 ///
+/// @since 3.2.0 -
+///   No longer accepts the `$format` parameter.
+///
 /// @access private
 /// @group font-helpers
 ///
@@ -215,6 +218,10 @@ $_font-format-options: (
 // -------------
 /// Build a `src` list
 /// for one `@font-face` declaration block.
+///
+/// @since 3.2.0 -
+///   Added to sort and compile src lists,
+///   with local() options and proper format order.
 ///
 /// @access private
 /// @group font-helpers
@@ -260,6 +267,9 @@ $_font-format-options: (
 /// Extract all the variant key/data pairs,
 /// and return a filtered font-map including only font-variants.
 ///
+/// @since 3.2.0 -
+///   Added to extract variant-data from a font-map.
+///
 /// @access private
 /// @group font-helpers
 ///
@@ -291,6 +301,10 @@ $_font-format-options: (
 // Parse Variant Name
 // ------------------
 /// Parse a list of font variants into a map of `style` and `weight` settings.
+///
+/// @since 3.2.0 -
+///   - Name changed from `_parse-font-variant` for clarity.
+///   - Supports both string and number values for font-weight.
 ///
 /// @access private
 /// @group font-helpers
@@ -327,6 +341,10 @@ $_font-format-options: (
 /// Strings are converted to maps,
 /// and format-paths are interpolated
 /// to create a self-contained map of variant data.
+///
+/// @since 3.2.0 -
+///   Added to normalize string and map variant syntaxes
+///   into a single (map) format for internal use.
 ///
 /// @access private
 /// @group font-helpers
@@ -392,6 +410,14 @@ $_font-format-options: (
 // ------------------------
 /// Compile provided font-variant data into a
 /// CSS `@font-face` import.
+///
+/// @since 3.2.0 -
+///   - Changed parameters to handle new syntax
+///     for variant-data and font-formats.
+///   - Errors when `path` is provided without `formats`.
+///   - Outputs updated font-face syntax, based on [Fontspring][fs] approach.
+///
+/// [fs]: https://blog.fontspring.com/2011/02/the-new-bulletproof-font-face-syntax/
 ///
 /// @access private
 /// @group font-helpers

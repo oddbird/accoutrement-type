@@ -532,6 +532,8 @@ it will include <code>source</code> links in the<span class="widont">&nbsp;</spa
 and replaced it with a <code>formats</code> property
 in each individual font map.
 <ul>
+<li>No longer accepts <code>regular</code> as a font-variant,
+use the CSS-friendly <code>normal</code> instead.</li>
 <li>Allow explicit configuration maps for each font variant,
 to support variant-specific <code>local</code> and <code>svgid</code> options,
 along with the ability to specificy
@@ -1094,7 +1096,7 @@ $fonts: (
   &#39;uri-font&#39;: (
     &#39;name&#39;: &#39;My Font&#39;,
     &#39;stack&#39;: (&#39;Helvetica&#39;, &#39;Arial&#39;, &#39;sans-serif&#39;),
-    &#39;regular&#39;: (
+    &#39;normal&#39;: (
       &#39;local&#39;: (&#39;My Font&#39;, &#39;my-font-regular&#39;),
       &#39;woff2&#39;: &#39;data:application/font-woff2;charset=utf-8;base64,…&#39;,
     ),
