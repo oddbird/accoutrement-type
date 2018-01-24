@@ -2,9 +2,11 @@ Changelog
 =========
 
 
-3.2.0 - UNRELEASED
+4.0.0 - UNRELEASED
 ------------------
-*Compared against 3.1.0 - for incremental changes, see the beta changelogs…*
+*Compared against 3.1.0 -
+for incremental changes,
+see the 3.2 beta changelogs…*
 
 - BREAKING: Change `$font-path` default to `''` (empty string)
   so that no path is prepended to fonts without explicit settings.
