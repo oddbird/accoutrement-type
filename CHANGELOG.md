@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-4.0.0 - UNRELEASED
-------------------
+4.0.0 - 01/24/18
+----------------
 *Compared against 3.1.0 -
 for incremental changes,
 see the 3.2 beta changelogs…*
