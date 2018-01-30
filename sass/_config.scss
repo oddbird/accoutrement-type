@@ -77,6 +77,8 @@ $font-path: '' !default;
 ///     explicit urls for each format desired.
 ///     The old string value will be treated the same as
 ///     a map with only `'path'` defined.
+///   - Supports `unicode-range` CSS property,
+///     as [described on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range).
 ///
 /// @group config
 /// @type Map
@@ -95,6 +97,11 @@ $font-path: '' !default;
 ///   (e.g. `'woff2' 'eot'`)
 ///   to use when interpolating font-file paths
 ///   for font-face imported fonts.
+/// @prop {list} <key>.unicode-range -
+///   Optionally import only specific unicode ranges.
+///   See [MDN unicode-range documentation][unicode] for details.
+///
+///   [unicode]: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range
 /// @prop {string | map} <key>.<variant> -
 ///   When describing locally-hosted or data-embedded fonts,
 ///   provide a key for each font-variant to import.
@@ -134,6 +141,7 @@ $font-path: '' !default;
 ///       'regular': 'museosans-regular-filename',
 ///       'bold': 'museosans-bold-filename',
 ///       'bold' 'italic': 'museosans-bolditalic-filename',
+///       'unicode-range': (U+0000-00FF, U+0131, U+0152-0153, U+02C6),
 ///       // safely document any additional font data you want…
 ///       'source': 'https://www.fontspring.com/fonts/exljbris/museo-sans',
 ///     ),

@@ -31,6 +31,8 @@ see the 3.2 beta changelogs…*
     Base64 font data, or additional formats for importing.
 - NEW: Allow either string or number values
   for font-weights (e.g. `200` or `'200'` ).
+- New: Supports `unicode-range` CSS property in font maps,
+  as [described on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range).
 
 [fs]: https://www.fontsquirrel.com/tools/webfont-generator
 

@@ -447,6 +447,11 @@ $_font-format-options: (
 ///   in the order given.
 ///   If formats are not explicitly given here,
 ///   we fallback to formats in a data-map.
+/// @param {list | null} <key>.unicode-range -
+///   Optionally import only specific unicode ranges.
+///   See [MDN unicode-range documentation][unicode] for details.
+///
+///   [unicode]: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range
 /// @output `@font-face` CSS-block for importing a given font variant.
 /// @throws When a generic variant-path is provided
 ///   without formats for interpolation.
@@ -472,17 +477,20 @@ $_font-format-options: (
   $name,
   $variant,
   $data,
-  $formats: ()
+  $formats: (),
+  $unicode: null
 ) {
   $variant: _parse-variant-name($variant);
   $data: _normalize-variant-data($data, $formats);
   $style: map-get($variant, 'style');
   $weight: map-get($variant, 'weight');
 
+
   @if ($data == 'format-error') {
     @error '(#{$name}) Font-path interpolation ' +
     'requires a list of `formats` to import.';
   }
+
 
   // Special handling of eot with local or data
   $eot: map-get($data, 'eot');
@@ -504,10 +512,22 @@ $_font-format-options: (
     }
   }
 
+
   // Format values for CSS
   $name: quote($name);
   $style: unquote($style);
   $weight: unquote($weight);
+
+  @if $unicode {
+    $new: ();
+
+    @each $code in $unicode {
+      $new: append($new, unquote($code), 'comma');
+    }
+
+    $unicode: $new;
+  }
+
 
   // Output…
   @if $double {
@@ -519,6 +539,7 @@ $_font-format-options: (
       font-style: $style;
       font-weight: $weight;
       src: $eot;
+      unicode-range: $unicode;
     }
 
     // everything else
@@ -527,6 +548,7 @@ $_font-format-options: (
       font-style: $style;
       font-weight: $weight;
       src: _font-src-list($data);
+      unicode-range: $unicode;
     }
   } @else {
     // combined output
@@ -537,6 +559,7 @@ $_font-format-options: (
       font-weight: $weight;
       src: $eot;
       src: _font-src-list($data);
+      unicode-range: $unicode;
     }
   }
 }

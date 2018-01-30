@@ -134,10 +134,11 @@
   $name: _font-name($key);
   $variants: _font-get-variants($font);
   $formats: map-get($font, 'formats') or ();
+  $unicode: map-get($font, 'unicode-range');
 
   @if (length($variants) > 0) {
     @each $variant, $data in $variants {
-      @include _import-font-face($name, $variant, $data, $formats);
+      @include _import-font-face($name, $variant, $data, $formats, $unicode);
     }
   }
 }

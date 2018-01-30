@@ -347,7 +347,34 @@
     }
   }
 
-  @include it('Alows local font src') {
+  @include it('Allows unicode range') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: 'path/to/myFont',
+          $formats: 'woff' 'svg',
+          $unicode: ('U+0000-00FF', 'U+0131', 'U+0152-0153', 'U+02C6')
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            url("../fonts/path/to/myFont.woff") format("woff"),
+            url("../fonts/path/to/myFont.svg") format("svg")
+          );
+          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6;
+        }
+      }
+    }
+  }
+
+  @include it('Allows local font src') {
     @include assert {
       @include output(false) {
         @include _import-font-face(
