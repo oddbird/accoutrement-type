@@ -487,15 +487,19 @@ $_font-format-options: (
   // Special handling of eot with local or data
   $eot: map-get($data, 'eot');
   $local: map-get($data, 'local');
-  $double: if($eot and $local, true, false);
+  $double: false;
 
   @if $eot {
     $eot: _font-url($eot, 'eot');
     $eot: font-url($eot);
 
-    @each $format, $url in $data {
-      @if ($format != 'local') and str-index($url, 'data:') {
-        $double: true;
+    @if (not str-index($eot, 'data:')) {
+      @each $format, $url in $data {
+        $has-data: (($format != 'local') and str-index($url, 'data:'));
+
+        @if  ($format == 'local') or $has-data {
+          $double: true;
+        }
       }
     }
   }

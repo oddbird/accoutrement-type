@@ -527,4 +527,37 @@
       }
     }
   }
+
+
+  @include it('Single block if eot files use base64') {
+    @include assert {
+      @include output(false) {
+        @include _import-font-face(
+          $name: 'Source Sans Pro',
+          $variant: 'bold',
+          $data: (
+            'path': 'path/to/myFont',
+            'local': 'hello world' 'hello-world',
+            'eot': 'data:application',
+          ),
+          $formats: 'woff' 'eot'
+        );
+      }
+
+      @include expect(false) {
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("data:application");
+          src: (
+            url("data:application") format("embedded-opentype"),
+            local('hello world'),
+            local('hello-world'),
+            url("../fonts/path/to/myFont.woff") format("woff")
+          );
+        }
+      }
+    }
+  }
 }
