@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-4.0.0 - 01/24/18
+4.0.0 - 01/30/18
 ----------------
 *Compared against 3.1.0 -
 for incremental changes,
