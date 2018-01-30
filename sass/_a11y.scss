@@ -2,6 +2,33 @@
 // ======
 
 
+/// # Accessibility
+///
+/// A simple set of utilities
+/// for handling text-visibility
+/// and screen-reader accessibility
+/// across your site.
+///
+/// @group a11y
+
+
+// Is Hidden
+// ---------
+/// Hide an element using either the `clip` or `position` method.
+/// @group a11y
+/// @param {'clip' | 'position'} $method ['clip'] -
+///   The hiding method to use.
+@mixin is-hidden(
+  $method: 'clip'
+) {
+  @if $method == 'position' {
+    @include _is-hidden--position;
+  } @else {
+    @include _is-hidden--clip;
+  }
+}
+
+
 // Is Hidden -- Position
 // ---------------------
 /// Hide an element by positioning it off the page.
@@ -31,18 +58,3 @@
 }
 
 
-// Is Hidden
-// ---------
-/// Hide an element using either the `clip` or `position` method.
-/// @group a11y
-/// @param {'clip' | 'position'} $method ['clip'] -
-///   The hiding method to use.
-@mixin is-hidden(
-  $method: 'clip'
-) {
-  @if $method == 'position' {
-    @include _is-hidden--position;
-  } @else {
-    @include _is-hidden--clip;
-  }
-}

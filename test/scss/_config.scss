@@ -1,14 +1,29 @@
 // Configuration Tests
 // ===================
 
+$font-path: '../fonts/';
+
 $fonts: (
-  'CenturyOldStyle': (
-    'stack': ('Georgia', 'serif'),
-    'normal': 'centuryoldstyle-regular-filename',
-    'italic': false,
+  'body-font': (
+    'name': 'Source Sans Pro',
+    'stack': ('Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'),
+    'formats': 'woff' 'svg' 'eot',
+    'normal': 'sans/sourcesanspro-regular-webfont',
+    'italic': 'sans/sourcesanspro-italic-webfont',
+    'bold': (
+      'path': 'sans/sourcesanspro-bold-webfont',
+      'local': 'source-sans-pro-bold' 'Source Sans Pro bold',
+      'ttf': 'sans-ttf/sourcesanspro-bold-webfont',
+      'woff': 'data:application/x-font-woff;charset=utf-8;base64...',
+      'svgid': 'boldID',
+    ),
   ),
 
-  'alias': 'CenturyOldStyle',
+  'TestFont': (
+    'stack': ('Georgia', 'serif'),
+  ),
+
+  'alias': 'body-font',
   'kevin bacon': 'alias',
 );
 
@@ -24,7 +39,7 @@ $fonts: (
     'stack': ('Helvetica', 'Arial', 'sans-serif'),
     'normal': 'franklingothic-regular-filename',
     'bold': 'franklingothic-bold-filename',
-    'bold' 'italic': 'franklingothic-bolditalic-filename',
+    'formats': 'woff2' 'woff',
   );
 
   @include it('Adds a font to the global variable') {

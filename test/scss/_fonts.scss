@@ -6,11 +6,17 @@
 // -------------------
 @include describe('font-url [function]') {
   @include it('Prepend font folder to font path') {
-    $test: font-url('myfont.woff');
-    $expect: url('../fonts/myfont.woff');
+    @include assert-equal(
+      font-url('myfont.woff'),
+      url('../fonts/myfont.woff')
+    );
+  }
 
-    @include assert-equal($test, $expect,
-      'Returns a full font-path with font-folder prepended.');
+  @include it('Leaves data-fonts without additional path info') {
+    @include assert-equal(
+      font-url('data:something'),
+      url('data:something')
+    );
   }
 }
 
@@ -19,21 +25,17 @@
 // ----------------------
 @include describe('Font Family [function]') {
   @include it('Explicit name') {
-    $expect: ('FranklinGothic', 'Helvetica', 'Arial', 'sans-serif');
-
     @include assert-equal(
-      font-family('sans'),
-      $expect,
-      'Returns a font-stack with explicit name prepended.');
+      font-family('body-font'),
+      ('Source Sans Pro', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif')
+    );
   }
 
   @include it('Implicit name') {
-    $expect: ('CenturyOldStyle', 'Georgia', 'serif');
-
     @include assert-equal(
-      font-family('CenturyOldStyle'),
-      $expect,
-      'Returns a font-stack with implicit name prepended.');
+      font-family('TestFont'),
+      ('TestFont', 'Georgia', 'serif')
+    );
   }
 }
 
@@ -44,11 +46,11 @@
   @include it('Generates font-family property and value') {
     @include assert {
       @include output {
-        @include font-family('sans');
+        @include font-family('body-font');
       }
 
       @include expect {
-        font-family: ('FranklinGothic', 'Helvetica', 'Arial', 'sans-serif');
+        font-family: ('Source Sans Pro', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif');
       }
     }
   }
@@ -58,7 +60,7 @@
 // Font Face [mixin]
 // -----------------
 @include describe('Font Face [mixin]') {
-  @include it('Font-face imports for local variants') {
+  @include it('Font-face imports for each variant') {
     @include assert {
       @include output(false) {
         @include font-face('kevin bacon');
@@ -66,10 +68,47 @@
 
       @include expect(false) {
         @font-face {
-          font-family: "kevin bacon";
+          font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: normal;
-          src: url("../fonts/centuryoldstyle-regular-filename.woff") format("woff"), url("../fonts/centuryoldstyle-regular-filename.ttf") format("truetype");
+          src: url("../fonts/sans/sourcesanspro-regular-webfont.eot");
+          src: (
+            url("../fonts/sans/sourcesanspro-regular-webfont.eot?#iefix") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.woff") format("woff"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.svg") format("svg"),
+          );
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: italic;
+          font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-italic-webfont.eot");
+          src: (
+            url("../fonts/sans/sourcesanspro-italic-webfont.eot?#iefix") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.woff") format("woff"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.svg") format("svg"),
+          );
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: url("../fonts/sans/sourcesanspro-bold-webfont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            local('source-sans-pro-bold'),
+            local('Source Sans Pro bold'),
+            url("data:application/x-font-woff;charset=utf-8;base64...") format("woff"),
+            url("../fonts/sans-ttf/sourcesanspro-bold-webfont.ttf") format("truetype"),
+            url("../fonts/sans/sourcesanspro-bold-webfont.svg#boldID") format("svg"),
+          );
         }
       }
     }
@@ -88,31 +127,67 @@
 
       @include expect(false) {
         @font-face {
-          font-family: "CenturyOldStyle";
+          font-family: "Source Sans Pro";
           font-style: normal;
           font-weight: normal;
-          src: url("../fonts/centuryoldstyle-regular-filename.woff") format("woff"), url("../fonts/centuryoldstyle-regular-filename.ttf") format("truetype");
+          src: url("../fonts/sans/sourcesanspro-regular-webfont.eot");
+          src: (
+            url("../fonts/sans/sourcesanspro-regular-webfont.eot?#iefix") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.woff") format("woff"),
+            url("../fonts/sans/sourcesanspro-regular-webfont.svg") format("svg"),
+          );
         }
 
         @font-face {
-          font-family: "FranklinGothic";
-          font-style: normal;
-          font-weight: normal;
-          src: url("../fonts/franklingothic-regular-filename.woff") format("woff"), url("../fonts/franklingothic-regular-filename.ttf") format("truetype");
-        }
-
-        @font-face {
-          font-family: "FranklinGothic";
-          font-style: normal;
-          font-weight: bold;
-          src: url("../fonts/franklingothic-bold-filename.woff") format("woff"), url("../fonts/franklingothic-bold-filename.ttf") format("truetype");
-        }
-
-        @font-face {
-          font-family: "FranklinGothic";
+          font-family: "Source Sans Pro";
           font-style: italic;
+          font-weight: normal;
+          src: url("../fonts/sans/sourcesanspro-italic-webfont.eot");
+          src: (
+            url("../fonts/sans/sourcesanspro-italic-webfont.eot?#iefix") format("embedded-opentype"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.woff") format("woff"),
+            url("../fonts/sans/sourcesanspro-italic-webfont.svg") format("svg"),
+          );
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
           font-weight: bold;
-          src: url("../fonts/franklingothic-bolditalic-filename.woff") format("woff"), url("../fonts/franklingothic-bolditalic-filename.ttf") format("truetype");
+          src: url("../fonts/sans/sourcesanspro-bold-webfont.eot");
+        }
+
+        @font-face {
+          font-family: "Source Sans Pro";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            local('source-sans-pro-bold'),
+            local('Source Sans Pro bold'),
+            url("data:application/x-font-woff;charset=utf-8;base64...") format("woff"),
+            url("../fonts/sans-ttf/sourcesanspro-bold-webfont.ttf") format("truetype"),
+            url("../fonts/sans/sourcesanspro-bold-webfont.svg#boldID") format("svg"),
+          );
+        }
+
+        @font-face {
+          font-family: "FranklinGothic";
+          font-style: normal;
+          font-weight: normal;
+          src: (
+            url("../fonts/franklingothic-regular-filename.woff2") format("woff2"),
+            url("../fonts/franklingothic-regular-filename.woff") format("woff")
+          );
+        }
+
+        @font-face {
+          font-family: "FranklinGothic";
+          font-style: normal;
+          font-weight: bold;
+          src: (
+            url("../fonts/franklingothic-bold-filename.woff2") format("woff2"),
+            url("../fonts/franklingothic-bold-filename.woff") format("woff")
+          );
         }
       }
     }
