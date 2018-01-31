@@ -158,9 +158,9 @@
     );
 
     $src: (
-      url('../fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
       local('source-sans-pro-bold'),
       local('Source Sans Pro bold'),
+      url('../fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
       url('../fonts/sourcesanspro-bold-webfont.woff2') format('woff2'),
       url('data:application/x-font-woff;charset=utf-8;base64...') format('woff'),
     );
@@ -578,9 +578,9 @@
           font-weight: bold;
           src: url("data:application");
           src: (
-            url("data:application") format("embedded-opentype"),
             local('hello world'),
             local('hello-world'),
+            url("data:application") format("embedded-opentype"),
             url("../fonts/path/to/myFont.woff") format("woff")
           );
         }

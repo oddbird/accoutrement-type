@@ -2,6 +2,13 @@ Changelog
 =========
 
 
+4.0.1 - 01/31/18
+----------------
+
+- `local()` always comes first in `@font-face` `src` order.
+- Fix typos in docs
+
+
 4.0.0 - 01/30/18
 ----------------
 *Compared against 3.1.0 -

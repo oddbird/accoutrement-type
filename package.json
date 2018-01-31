@@ -1,7 +1,7 @@
 {
   "name": "accoutrement-type",
   "title": "Accoutrement Type",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Sass typography and webfont utilities.",
   "homepage": "http://oddbird.net/accoutrement-type/",
   "repository": {

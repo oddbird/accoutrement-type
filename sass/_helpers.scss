@@ -53,8 +53,8 @@ $_font-weight-options: (
 /// @access private
 /// @group font-helpers
 $_font-format-options: (
-  'eot': 'embedded-opentype',
   'local': null,
+  'eot': 'embedded-opentype',
   'woff2': 'woff2',
   'woff': 'woff',
   'ttf': 'truetype',
