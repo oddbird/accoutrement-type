@@ -130,7 +130,7 @@ $_font-format-options: (
 }
 
 
-// Font URL
+// Font Path
 // --------
 /// Interpolate a font path and format-type
 /// to create the proper font-src import URL.
@@ -160,7 +160,7 @@ $_font-format-options: (
 ///   Optionally append an `?#iefix` suffix to `eot` fonts.
 /// @return {string} -
 ///   Font-format URL for importing.
-@function _font-url(
+@function _font-path(
   $path,
   $format,
   $svgid: null,
@@ -221,7 +221,7 @@ $_font-format-options: (
   $format-name: map-get($_font-format-options, $format);
   $format-name: if($format-name, format($format-name), '');
 
-  $path: _font-url($path, $format, $iefix: true);
+  $path: _font-path($path, $format, $iefix: true);
   @return font-url($path) $format-name;
 }
 
@@ -394,7 +394,7 @@ $_font-format-options: (
   @if $path {
     @if (length($formats) > 0) {
       @each $format in $formats {
-        $url: _font-url($path, $format, $svgid);
+        $url: _font-path($path, $format, $svgid);
         $implicit: map-merge($implicit, ($format: $url));
       }
     } @else {
@@ -407,7 +407,7 @@ $_font-format-options: (
 
   @each $key, $value in $data {
     @if map-has-key($_font-format-options, $key) {
-      $url: _font-url($value, $key, $svgid);
+      $url: _font-path($value, $key, $svgid);
       $explicit: map-merge($explicit, ($key: $url));
     }
   }
@@ -498,7 +498,7 @@ $_font-format-options: (
   $double: false;
 
   @if $eot {
-    $eot: _font-url($eot, 'eot');
+    $eot: _font-path($eot, 'eot');
     $eot: font-url($eot);
 
     @if (not str-index($eot, 'data:')) {
