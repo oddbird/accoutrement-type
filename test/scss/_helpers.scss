@@ -42,7 +42,7 @@
 }
 
 
-// Font URL
+// Font Path
 // --------
 @include describe('_Font URL [function]') {
   @include it('Returns base64 data with no changes') {
